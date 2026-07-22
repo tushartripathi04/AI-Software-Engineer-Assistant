@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from app.api.v1.endpoints.auth import router as auth_router
 from app.api.v1.endpoints.users import router as users_router
+from app.api.v1.endpoints.code import router as code_router
 from app.core.config import settings
 from app.api.v1.endpoints.chat import router as chat_router
 app = FastAPI(
@@ -12,6 +13,7 @@ app = FastAPI(
 app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(chat_router)
+app.include_router(code_router, prefix="/code", tags=["Code Generator"])
 
 @app.get("/")
 def root():
