@@ -1,5 +1,5 @@
-# from app.services.groq_client import GroqClient
-from app.ai.groq_client import GroqClient
+from app.ai.ai_service import AIService
+from app.ai.response_parser import ResponseParser
 from app.schemas.code import (
     CodeGenerationRequest,
     CodeGenerationResponse,
@@ -7,78 +7,58 @@ from app.schemas.code import (
 
 
 class CodeGenerationService:
+
     def __init__(self):
-        self.groq_client = GroqClient()
+        self.ai_service = AIService()
 
     def generate_code(
         self,
-        request: CodeGenerationRequest
+        request: CodeGenerationRequest,
     ) -> CodeGenerationResponse:
 
-        messages = [
-            {
-                "role": "system",
-                "content": (
-                    "You are an expert Software Engineer.\n"
-                    "Generate clean, production-quality code.\n\n"
+        system_prompt = (
+            "You are an expert Software Engineer.\n"
+            "Generate clean, production-quality code.\n\n"
+            "Return the response in EXACTLY this format:\n\n"
+            "CODE:\n"
+            "<generated code>\n\n"
+            "EXPLANATION:\n"
+            "<short explanation>\n\n"
+            "TIME COMPLEXITY:\n"
+            "<Big-O>\n\n"
+            "Do not use markdown code fences."
+        )
 
-                    "Return the response in EXACTLY this format:\n\n"
+        user_prompt = (
+            f"Programming Language: {request.language}\n\n"
+            f"Task:\n{request.prompt}"
+        )
 
-                    "CODE:\n"
-                    "<generated code>\n\n"
+        response = self.ai_service.execute(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+        )
 
-                    "EXPLANATION:\n"
-                    "<short explanation>\n\n"
+        try:
 
-                    "TIME COMPLEXITY:\n"
-                    "<Big-O>\n\n"
-
-                    "Do not use markdown code fences."
-                )
-            },
-            {
-                "role": "user",
-                "content": (
-                    f"Programming Language: {request.language}\n\n"
-                    f"Task:\n{request.prompt}"
-                )
-            }
-        ]
-
-        response = self.groq_client.generate_response(messages)
-
-        code = ""
-        explanation = ""
-        complexity = ""
-
-        if "EXPLANATION:" in response:
-
-            code_part, remaining = response.split(
-                "EXPLANATION:",
-                1
+            sections = ResponseParser.split_sections(
+                response,
+                [
+                    "CODE:",
+                    "EXPLANATION:",
+                    "TIME COMPLEXITY:",
+                ],
             )
 
-            code = code_part.replace(
-                "CODE:",
-                ""
-            ).strip()
+            code = sections["CODE:"]
+            explanation = sections["EXPLANATION:"]
+            complexity = sections["TIME COMPLEXITY:"]
 
-            if "TIME COMPLEXITY:" in remaining:
+        except Exception:
 
-                explanation_part, complexity_part = remaining.split(
-                    "TIME COMPLEXITY:",
-                    1
-                )
-
-                explanation = explanation_part.strip()
-
-                complexity = complexity_part.strip()
-
-            else:
-                explanation = remaining.strip()
-
-        else:
             code = response
+            explanation = ""
+            complexity = ""
 
         return CodeGenerationResponse(
             language=request.language,
