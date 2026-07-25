@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from app.core.config import settings
-
+from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.endpoints.auth import router as auth_router
 from app.api.v1.endpoints.users import router as users_router
 from app.api.v1.endpoints.chat import router as chat_router
@@ -25,13 +25,47 @@ from app.core.handlers import (
     global_exception_handler,
 )
 from app.core.logger import logger
-
-
+from app.middleware.request_logger import (
+    RequestLoggingMiddleware,
+)
+from app.middleware.request_id import RequestIDMiddleware
+from app.services.health_service import HealthService
+from app.api.v1.endpoints.sql_generator import (
+    router as sql_generator_router,
+)
+from app.api.v1.endpoints.api_generator import (
+    router as api_generator_router,
+)
+from app.api.v1.endpoints.diagram_generator import (
+    router as diagram_generator_router,
+)
+from app.api.v1.endpoints.readme_generator import (
+    router as readme_generator_router,
+)
+from app.api.v1.endpoints.resume_generator import (
+    router as resume_generator_router,
+)
+from app.api.v1.endpoints.interview_assistant import (
+    router as interview_assistant_router,
+)
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
 )
 logger.info("Starting AI Software Engineer Assistant API...")
+
+# Add Middleware
+
+app.add_middleware(RequestLoggingMiddleware)
+app.add_middleware(RequestIDMiddleware)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.allowed_origins_list,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Register Exception Handlers
 app.add_exception_handler(
@@ -103,7 +137,42 @@ app.include_router(
     prefix="/complexity",
     tags=["Complexity Analyzer"],
 )
-
+# AI SQL Generator
+app.include_router(
+    sql_generator_router,
+    prefix="/sql",
+    tags=["AI SQL Generator"],
+)
+# AI API Generator
+app.include_router(
+    api_generator_router,
+    prefix="/api",
+    tags=["AI API Generator"],
+)
+# AI Diagram Generator
+app.include_router(
+    diagram_generator_router,
+    prefix="/diagram",
+    tags=["AI Diagram Generator"],
+)
+# AI README Generator
+app.include_router(
+    readme_generator_router,
+    prefix="/readme",
+    tags=["AI README Generator"],
+)
+# AI Resume & Portfolio Generator
+app.include_router(
+    resume_generator_router,
+    prefix="/resume",
+    tags=["AI Resume Generator"],
+)
+# AI Interview Assistant
+app.include_router(
+    interview_assistant_router,
+    prefix="/interview",
+    tags=["AI Interview Assistant"],
+)
 @app.get("/")
 def root():
     return {
@@ -113,7 +182,4 @@ def root():
 
 @app.get("/health")
 def health():
-    return {
-        "status": "healthy",
-        "version": settings.APP_VERSION,
-    }
+    return HealthService.get_health_status()
