@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 40px; }
+        .container { max-width: 800px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        a { color: #0078D7; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to your Dashboard, {{ username }}!</h1>
+        <p>You have successfully logged in.</p>
+        <br>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</body>
+</html>

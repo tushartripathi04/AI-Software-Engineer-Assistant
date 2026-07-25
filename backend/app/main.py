@@ -48,6 +48,9 @@ from app.api.v1.endpoints.resume_generator import (
 from app.api.v1.endpoints.interview_assistant import (
     router as interview_assistant_router,
 )
+from app.api.v1.endpoints.project_analyzer import (
+    router as project_analyzer_router,
+)
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
@@ -172,6 +175,12 @@ app.include_router(
     interview_assistant_router,
     prefix="/interview",
     tags=["AI Interview Assistant"],
+)
+# AI Project Analyzer
+app.include_router(
+    project_analyzer_router,
+    prefix="/project",
+    tags=["AI Project Analyzer"],
 )
 @app.get("/")
 def root():
