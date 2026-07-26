@@ -51,6 +51,9 @@ from app.api.v1.endpoints.interview_assistant import (
 from app.api.v1.endpoints.project_analyzer import (
     router as project_analyzer_router,
 )
+from app.api.v1.endpoints.git_assistant import (
+    router as git_assistant_router,
+)
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
@@ -181,6 +184,12 @@ app.include_router(
     project_analyzer_router,
     prefix="/project",
     tags=["AI Project Analyzer"],
+)
+# AI Git Assistant
+app.include_router(
+    git_assistant_router,
+    prefix="/git",
+    tags=["AI Git Assistant"],
 )
 @app.get("/")
 def root():
