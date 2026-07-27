@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useLogin } from "@/hooks/useLogin";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -17,6 +18,10 @@ export default function Login() {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
+
+
+    // remaining code
+
 
   const loginMutation = useMutation({
     mutationFn: AuthService.login,
@@ -69,11 +74,14 @@ export default function Login() {
             className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none focus:border-blue-500"
           />
 
-          {errors.password && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.password.message}
-            </p>
-          )}
+         {
+    loginMutation.isError && (
+        <p className="text-sm text-red-500 mt-2">
+            Invalid email or password
+        </p>
+    )
+}
+
         </div>
 
         <button
