@@ -9,7 +9,7 @@ import AuthService from "../../services/auth.service";
 
 import { loginSchema } from "../../lib/validators/auth";
 import type { LoginFormData } from "../../lib/validators/auth";
-
+import { useNavigate } from "react-router-dom";
 export default function Login() {
   const {
     register,
@@ -18,6 +18,8 @@ export default function Login() {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
+
+  const navigate = useNavigate();
 
 
     // remaining code
@@ -28,6 +30,7 @@ export default function Login() {
 
     onSuccess: () => {
       toast.success("Login successful!");
+      navigate("/dashboard");
     },
 
     onError: (error: any) => {
@@ -38,9 +41,9 @@ export default function Login() {
     },
   });
 
-  const onSubmit = (data: LoginFormData) => {
-    loginMutation.mutate(data);
-  };
+ const onSubmit = (data: LoginFormData) => {
+  loginMutation.mutate(data);
+};
 
   return (
     <AuthLayout
