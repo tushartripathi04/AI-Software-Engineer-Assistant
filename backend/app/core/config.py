@@ -1,3 +1,4 @@
+from typing import List
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -48,7 +49,7 @@ class Settings(BaseSettings):
     ALLOWED_ORIGINS: str = ""
 
     @property
-    def allowed_origins_list(self):
+    def allowed_origins_list(self) -> List[str]:
         return [
             origin.strip()
             for origin in self.ALLOWED_ORIGINS.split(",")

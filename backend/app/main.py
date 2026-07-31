@@ -54,6 +54,11 @@ from app.api.v1.endpoints.project_analyzer import (
 from app.api.v1.endpoints.git_assistant import (
     router as git_assistant_router,
 )
+from app.api.v1.endpoints.conversation import (
+    router as conversation_router,
+)
+
+
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
@@ -72,7 +77,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 # Register Exception Handlers
 app.add_exception_handler(
     AIAssistantException,
@@ -96,6 +100,10 @@ app.include_router(users_router)
 
 # AI Chat
 app.include_router(chat_router)
+
+# AI Conversation
+app.include_router(conversation_router)
+
 
 # AI Code Generator
 app.include_router(

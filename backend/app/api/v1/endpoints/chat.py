@@ -26,12 +26,16 @@ def chat(
     try:
         chat_service = ChatService(db)
 
-        response = chat_service.chat(
+        result = chat_service.chat(
             user_id=current_user.id,
             message=request.message,
+            conversation_id=request.conversation_id,
         )
 
-        return ChatResponse(response=response)
+        return ChatResponse(
+            conversation_id=result["conversation_id"],
+            response=result["response"],
+        )
 
     except Exception as e:
         raise HTTPException(

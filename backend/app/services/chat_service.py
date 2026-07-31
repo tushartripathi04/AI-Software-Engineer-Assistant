@@ -1,49 +1,9 @@
-
-
-# from sqlalchemy.orm import Session
-
-# from app.ai.ai_service import AIService
-# from app.repositories.chat_repository import ChatRepository
-
-
-# class ChatService:
-
-#     def __init__(self, db: Session):
-#         self.db = db
-#         self.ai_service = AIService()
-#         self.chat_repository = ChatRepository(db)
-
-#     def chat(
-#         self,
-#         user_id,
-#         message: str,
-#     ) -> str:
-
-#         # Save user message
-#         self.chat_repository.create_message(
-#             user_id=user_id,
-#             role="user",
-#             message=message,
-#         )
-
-#         # Generate AI response
-#         ai_response = self.ai_service.chat(message)
-
-#         # Save AI response
-#         self.chat_repository.create_message(
-#             user_id=user_id,
-#             role="assistant",
-#             message=ai_response,
-#         )
-
-#         return ai_response
-
-
 from sqlalchemy.orm import Session
 
 from app.ai.groq_client import GroqClient
 from app.ai.prompts import SOFTWARE_ENGINEER_SYSTEM_PROMPT
 from app.repositories.chat_repository import ChatRepository
+from app.services.conversation_service import ConversationService
 
 
 class ChatService:
@@ -51,25 +11,44 @@ class ChatService:
     def __init__(self, db: Session):
         self.db = db
         self.chat_repository = ChatRepository(db)
+        self.conversation_service = ConversationService(db)
         self.groq_client = GroqClient()
 
     def chat(
         self,
         user_id,
         message: str,
-    ) -> str:
+        conversation_id=None,
+    ):
 
-        # Save current user message
+        # Create new conversation if required
+        if conversation_id is None:
+            title = message[:50]
+            conversation = self.conversation_service.create(
+                user_id=user_id,
+                title=title,
+            )
+        else:
+            conversation = self.conversation_service.get_by_id(
+                conversation_id
+            )
+
+            if conversation is None:
+                raise ValueError("Conversation not found.")
+
+        # Save user message
         self.chat_repository.create_message(
-            user_id=user_id,
+            conversation_id=conversation.id,
             role="user",
-            message=message,
+            content=message,
         )
 
-        # Load previous conversation
-        history = self.chat_repository.get_chat_history(user_id)
+        # Load complete conversation
+        history = self.chat_repository.get_conversation_messages(
+            conversation.id
+        )
 
-        # Build conversation for Groq
+        # Build prompt
         messages = [
             {
                 "role": "system",
@@ -77,22 +56,25 @@ class ChatService:
             }
         ]
 
-        for chat in history:
+        for item in history:
             messages.append(
                 {
-                    "role": chat.role,
-                    "content": chat.message,
+                    "role": item.role,
+                    "content": item.content,
                 }
             )
 
-        # Generate AI response
+        # AI response
         ai_response = self.groq_client.generate_response(messages)
 
-        # Save AI response
+        # Save assistant message
         self.chat_repository.create_message(
-            user_id=user_id,
+            conversation_id=conversation.id,
             role="assistant",
-            message=ai_response,
+            content=ai_response,
         )
 
-        return ai_response
+        return {
+            "conversation_id": str(conversation.id),
+            "response": ai_response,
+        }

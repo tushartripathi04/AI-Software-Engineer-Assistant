@@ -54,3 +54,9 @@ class User(Base):
     back_populates="user",
     cascade="all, delete-orphan",
 )
+    #  yha se apne conversation ka relationship add kiya hai
+    conversations = relationship(
+    "Conversation",
+    back_populates="user",
+    cascade="all, delete-orphan",
+)
