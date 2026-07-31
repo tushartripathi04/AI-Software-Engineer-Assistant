@@ -6,6 +6,10 @@ export function useChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
 
+  // Store current conversation
+  const [conversationId, setConversationId] =
+    useState<string | null>(null);
+
   async function send(content: string) {
     if (!content.trim()) return;
 
@@ -21,7 +25,15 @@ export function useChat() {
     setLoading(true);
 
     try {
-      const response = await sendMessage(content);
+      const response = await sendMessage({
+        message: content,
+        conversation_id: conversationId ?? undefined,
+      });
+
+      // Save conversation ID returned by backend
+      if (!conversationId) {
+        setConversationId(response.conversation_id);
+      }
 
       const assistantMessage: ChatMessage = {
         id: crypto.randomUUID(),
@@ -34,6 +46,8 @@ export function useChat() {
         ...prev,
         assistantMessage,
       ]);
+    } catch (error) {
+      console.error("Chat Error:", error);
     } finally {
       setLoading(false);
     }
@@ -43,5 +57,6 @@ export function useChat() {
     messages,
     loading,
     send,
+    conversationId,
   };
 }

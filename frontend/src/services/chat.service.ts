@@ -2,20 +2,20 @@ import api from "@/lib/api";
 
 export interface ChatRequest {
   message: string;
+  conversation_id?: string;
 }
 
 export interface ChatResponse {
+  conversation_id: string;
   response: string;
 }
 
 export async function sendMessage(
-  message: string
+  request: ChatRequest
 ): Promise<ChatResponse> {
   const { data } = await api.post<ChatResponse>(
     "/chat",
-    {
-      message,
-    }
+    request
   );
 
   return data;
