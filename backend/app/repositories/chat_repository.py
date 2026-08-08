@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from uuid import UUID
 
 from sqlalchemy.orm import Session
@@ -13,86 +13,56 @@ class ChatRepository:
 
     def create_message(
         self,
-        conversation_id: UUID,
+        user_id: UUID,
         role: str,
-        content: str,
+        message: str,
+        conversation_id: UUID,
     ) -> Message:
         """
-        Save a message inside a conversation.
+        Create and save a message inside a conversation.
         """
 
-        db_message = Message(
+        chat = Message(
             conversation_id=conversation_id,
             role=role,
-            content=content,
+            content=message,
         )
 
-        self.db.add(db_message)
+        self.db.add(chat)
         self.db.commit()
-        self.db.refresh(db_message)
+        self.db.refresh(chat)
 
-        return db_message
+        return chat
 
     def get_conversation_messages(
-        self,
-        conversation_id: UUID,
-    ) -> List[Message]:
-        """
-        Return all messages for a conversation.
-        """
-
-        return (
-            self.db.query(Message)
-            .filter(Message.conversation_id == conversation_id)
-            .order_by(Message.created_at.asc())
-            .all()
-        )
-
-    def get_last_messages(
         self,
         conversation_id: UUID,
         limit: int = 20,
     ) -> List[Message]:
         """
-        Return the latest N messages.
-        """
-
-        messages = (
-            self.db.query(Message)
-            .filter(Message.conversation_id == conversation_id)
-            .order_by(Message.created_at.desc())
-            .limit(limit)
-            .all()
-        )
-
-        return list(reversed(messages))
-
-    def delete_conversation_messages(
-        self,
-        conversation_id: UUID,
-    ) -> None:
-        """
-        Delete every message belonging to a conversation.
-        """
-
-        (
-            self.db.query(Message)
-            .filter(Message.conversation_id == conversation_id)
-            .delete()
-        )
-
-        self.db.commit()
-
-    def count_messages(
-        self,
-        conversation_id: UUID,
-    ) -> int:
-        """
-        Count messages in a conversation.
+        Get messages belonging to a specific conversation.
         """
 
         return (
             self.db.query(Message)
-            .filter(Message.conversation_id == conversation_id)
-            .count()
+            .filter(
+                Message.conversation_id == conversation_id
+            )
+            .order_by(Message.created_at.asc())
+            .limit(limit)
+            .all()
+        )
+
+    def get_message_by_id(
+        self,
+        message_id: UUID,
+    ) -> Optional[Message]:
+        """
+        Get a single message by ID.
+        """
+
+        return (
+            self.db.query(Message)
+            .filter(Message.id == message_id)
+            .first()
         )

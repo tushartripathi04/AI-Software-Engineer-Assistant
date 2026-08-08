@@ -36,7 +36,22 @@ class ConversationRepository:
         return (
             self.db.query(Conversation)
             .filter(
+                Conversation.id == conversation_id
+            )
+            .first()
+        )
+
+    def get_by_id_for_user(
+        self,
+        conversation_id: UUID,
+        user_id: UUID,
+    ) -> Optional[Conversation]:
+
+        return (
+            self.db.query(Conversation)
+            .filter(
                 Conversation.id == conversation_id,
+                Conversation.user_id == user_id,
             )
             .first()
         )
@@ -49,7 +64,7 @@ class ConversationRepository:
         return (
             self.db.query(Conversation)
             .filter(
-                Conversation.user_id == user_id,
+                Conversation.user_id == user_id
             )
             .order_by(
                 Conversation.updated_at.desc()
@@ -70,10 +85,22 @@ class ConversationRepository:
 
         return conversation
 
+    def touch(
+        self,
+        conversation: Conversation,
+    ) -> Conversation:
+
+        self.db.add(conversation)
+
+        self.db.commit()
+        self.db.refresh(conversation)
+
+        return conversation
+
     def delete(
         self,
         conversation: Conversation,
-    ):
+    ) -> None:
 
         self.db.delete(conversation)
         self.db.commit()
