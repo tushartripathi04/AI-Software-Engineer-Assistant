@@ -9,7 +9,7 @@ export default function ChatMessages({
   messages,
 }: Props) {
   return (
-    <div className="flex-1 overflow-y-auto space-y-6 p-8">
+    <div className="min-h-0 flex-1 overflow-y-auto space-y-6 p-8">
       {messages.map((message) => (
         <ChatBubble
           key={message.id}

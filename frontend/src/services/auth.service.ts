@@ -1,35 +1,4 @@
-// import api from "@/lib/axios";
-// import {
-//   LoginRequest,
-//   RegisterRequest,
-//   LoginResponse,
-// } from "@/types/auth";
 
-// class AuthService {
-//   async register(data: RegisterRequest) {
-//     const response = await api.post("/auth/register", data);
-//     return response.data;
-//   }
-
-//   async login(data: LoginRequest): Promise<LoginResponse> {
-//     const response = await api.post("/auth/login", data);
-
-//     localStorage.setItem(
-//       "access_token",
-//       response.data.access_token
-//     );
-
-//     return response.data;
-//   }
-
-//   logout() {
-//     localStorage.removeItem("access_token");
-//   }
-
-//   isAuthenticated() {
-//     return !!localStorage.getItem("access_token");
-//   }
-// }
 
 // export default new AuthService();
 import api from "../lib/axios";
