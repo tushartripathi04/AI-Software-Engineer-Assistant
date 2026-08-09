@@ -16,7 +16,12 @@ import SQLGenerator from "./pages/SQLGenerator/SQLGenerator";
 import APIGenerator from "./pages/APIGenerator/APIGenerator";
 import DiagramGenerator from "./pages/DiagramGenerator/DiagramGenerator";
 import ReadmeGenerator from "./pages/ReadmeGenerator/ReadmeGenerator";
-
+import ProjectAnalyzer from "./pages/ProjectAnalyzer/ProjectAnalyzer";
+import ResumeGenerator from "./pages/ResumeGenerator/ResumeGenerator";
+import InterviewAssistant from "./pages/InterviewAssistant/InterviewAssistant";
+import CodeExplainer from "./pages/CodeExplainer/CodeExplainer";
+import ComplexityAnalyzer from "./pages/ComplexityAnalyzer/ComplexityAnalyzer";
+import GitAssistant from "./pages/GitAssistant/GitAssistant";
 export default function App() {
   return (
     <Routes>
@@ -140,7 +145,66 @@ export default function App() {
     </ProtectedRoute>
   }
 />
-
+<Route
+  path="/project-analyzer"
+  element={
+    <ProtectedRoute>
+      <DashboardLayout>
+        <ProjectAnalyzer />
+      </DashboardLayout>
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/resume"
+  element={
+    <ProtectedRoute>
+      <DashboardLayout>
+        <ResumeGenerator />
+      </DashboardLayout>
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/interview"
+  element={
+    <ProtectedRoute>
+      <DashboardLayout>
+        <InterviewAssistant />
+      </DashboardLayout>
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/code-explainer"
+  element={
+    <ProtectedRoute>
+      <DashboardLayout>
+        <CodeExplainer />
+      </DashboardLayout>
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/complexity"
+  element={
+    <ProtectedRoute>
+      <DashboardLayout>
+        <ComplexityAnalyzer />
+      </DashboardLayout>
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/git-assistant"
+  element={
+    <ProtectedRoute>
+      <DashboardLayout>
+        <GitAssistant />
+      </DashboardLayout>
+    </ProtectedRoute>
+  }
+/>
       {/* Default Route */}
       <Route
         path="*"

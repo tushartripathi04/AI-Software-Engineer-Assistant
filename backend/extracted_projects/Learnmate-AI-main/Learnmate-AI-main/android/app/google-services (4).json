@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "442853048251",
+    "project_id": "learnmate-229d6",
+    "storage_bucket": "learnmate-229d6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:442853048251:android:d32fef1f0769cbba140e9e",
+        "android_client_info": {
+          "package_name": "com.muad.learnmate.learnmate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "442853048251-f6ph3g96t559al1uaqu68i1sdr8p7b75.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.muad.learnmate.learnmate",
+            "certificate_hash": "27eafc165e0c6b5a61b2555cdb38efc5a82041d7"
+          }
+        },
+        {
+          "client_id": "442853048251-5ve2a1898rmahf9a9hjfq8cntvf0rc72.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIk4mv1-TuV74BQxzao1pFAESBpH63FVU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "442853048251-5ve2a1898rmahf9a9hjfq8cntvf0rc72.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

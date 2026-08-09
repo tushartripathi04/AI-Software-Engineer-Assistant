@@ -11,8 +11,10 @@ import {
   TestTube2,
   ServerCog,
   FileBadge,
+  FolderSearch, 
   GitBranch,
   Briefcase,
+  Gauge,
   Settings,
   Sparkles,
 } from "lucide-react";
@@ -42,6 +44,16 @@ const menuGroups = [
         path: "/code-generator",
         icon: Code2,
       },
+      {
+        name: "Code Explainer",
+        path: "/code-explainer",
+        icon: Code2,
+      },
+      {
+       name: "Complexity Analyzer",
+       path: "/complexity",
+        icon: Gauge,
+       },
       {
         name: "Code Reviewer",
         path: "/code-reviewer",
@@ -82,6 +94,16 @@ const menuGroups = [
            path: "/readme-generator",
            icon: FileText,
        },
+       {
+            name: "Project Analyzer",
+             path: "/project-analyzer",
+             icon: FolderSearch,
+        },
+        {
+           name: "Git Assistant",
+           path: "/git-assistant",
+            icon: GitBranch,
+},
     ],
   },
 
@@ -198,12 +220,7 @@ export default function Sidebar() {
                       {item.name}
                     </span>
 
-                    {(item.name === "Resume Generator" ||
-                      item.name === "Interview Assistant") && (
-                      <span className="ml-auto rounded-full bg-violet-500/20 px-2 py-1 text-[10px] text-violet-300">
-                        Soon
-                      </span>
-                    )}
+         
                   </NavLink>
                 );
               })}
