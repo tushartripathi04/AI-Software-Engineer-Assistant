@@ -8,6 +8,8 @@ import {
   Bug,
   FileText,
   Database,
+  TestTube2,
+  ServerCog,
   FileBadge,
   Briefcase,
   Settings,
@@ -55,10 +57,20 @@ const menuGroups = [
         icon: FileText,
       },
       {
+        name: "Test Case Generator",
+        path: "/test-cases",
+        icon: TestTube2,
+      },
+      {
         name: "SQL Generator",
         path: "/sql-generator",
         icon: Database,
       },
+      {
+         name: "API Generator",
+         path: "/api-generator",
+         icon: ServerCog,
+        },
     ],
   },
 

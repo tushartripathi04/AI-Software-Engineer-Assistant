@@ -7,6 +7,14 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import DashboardLayout from "./layouts/DashboardLayout";
 import Chat from "./pages/Chat/Chat";
+import CodeGenerator from "./pages/CodeGenerator/CodeGenerator";
+import CodeReviewer from "./pages/CodeReviewer/CodeReviewer";
+import BugFixer from "./pages/BugFixer/BugFixer";
+import Documentation from "./pages/Documentation/Documentation";
+import TestCaseGenerator from "./pages/TestCaseGenerator/TestCaseGenerator";
+import SQLGenerator from "./pages/SQLGenerator/SQLGenerator";
+import APIGenerator from "./pages/APIGenerator/APIGenerator";
+
 export default function App() {
   return (
     <Routes>
@@ -26,6 +34,79 @@ export default function App() {
           </ProtectedRoute>
         }
       />
+
+      <Route
+  path="/test-cases"
+  element={
+    <ProtectedRoute>
+      <DashboardLayout>
+        <TestCaseGenerator />
+      </DashboardLayout>
+    </ProtectedRoute>
+  }
+/>
+
+      <Route
+  path="/code-generator"
+  element={
+    <ProtectedRoute>
+      <DashboardLayout>
+        <CodeGenerator />
+      </DashboardLayout>
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/code-reviewer"
+  element={
+    <ProtectedRoute>
+      <DashboardLayout>
+        <CodeReviewer />
+      </DashboardLayout>
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/documentation"
+  element={
+    <ProtectedRoute>
+      <DashboardLayout>
+        <Documentation />
+      </DashboardLayout>
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/sql-generator"
+  element={
+    <ProtectedRoute>
+      <DashboardLayout>
+        <SQLGenerator />
+      </DashboardLayout>
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/bug-fixer"
+  element={
+    <ProtectedRoute>
+      <DashboardLayout>
+        <BugFixer />
+      </DashboardLayout>
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/api-generator"
+  element={
+    <ProtectedRoute>
+      <DashboardLayout>
+        <APIGenerator />
+      </DashboardLayout>
+    </ProtectedRoute>
+  }
+/>
 
       <Route
   path="/chat"
