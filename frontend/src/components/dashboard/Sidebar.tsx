@@ -11,6 +11,7 @@ import {
   TestTube2,
   ServerCog,
   FileBadge,
+  GitBranch,
   Briefcase,
   Settings,
   Sparkles,
@@ -71,6 +72,16 @@ const menuGroups = [
          path: "/api-generator",
          icon: ServerCog,
         },
+        {
+          name: "Diagram Generator",
+          path: "/diagram-generator",
+          icon: GitBranch,
+        },
+        {
+           name: "README Generator",
+           path: "/readme-generator",
+           icon: FileText,
+       },
     ],
   },
 

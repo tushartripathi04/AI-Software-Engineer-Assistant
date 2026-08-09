@@ -14,6 +14,8 @@ import Documentation from "./pages/Documentation/Documentation";
 import TestCaseGenerator from "./pages/TestCaseGenerator/TestCaseGenerator";
 import SQLGenerator from "./pages/SQLGenerator/SQLGenerator";
 import APIGenerator from "./pages/APIGenerator/APIGenerator";
+import DiagramGenerator from "./pages/DiagramGenerator/DiagramGenerator";
+import ReadmeGenerator from "./pages/ReadmeGenerator/ReadmeGenerator";
 
 export default function App() {
   return (
@@ -86,6 +88,16 @@ export default function App() {
     </ProtectedRoute>
   }
 />
+<Route
+  path="/readme-generator"
+  element={
+    <ProtectedRoute>
+      <DashboardLayout>
+        <ReadmeGenerator />
+      </DashboardLayout>
+    </ProtectedRoute>
+  }
+/>
 
 <Route
   path="/bug-fixer"
@@ -103,6 +115,16 @@ export default function App() {
     <ProtectedRoute>
       <DashboardLayout>
         <APIGenerator />
+      </DashboardLayout>
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/diagram-generator"
+  element={
+    <ProtectedRoute>
+      <DashboardLayout>
+        <DiagramGenerator />
       </DashboardLayout>
     </ProtectedRoute>
   }
