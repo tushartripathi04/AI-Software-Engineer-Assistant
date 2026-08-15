@@ -1,4 +1,9 @@
-import { Plus, MessageSquare } from "lucide-react";
+import {
+  Plus,
+  MessageSquare,
+  MessageCircle,
+} from "lucide-react";
+
 import { useConversations } from "@/hooks/useConversations";
 
 interface ChatSidebarProps {
@@ -18,74 +23,298 @@ export default function ChatSidebar({
   } = useConversations();
 
   return (
-    <aside className="flex h-full w-80 shrink-0 flex-col overflow-hidden border-r border-slate-800 bg-slate-900">
-      {/* New Chat */}
-      <div className="shrink-0 border-b border-slate-800 p-5">
+    <aside
+      className="
+        flex h-full w-80 shrink-0
+        flex-col
+        overflow-hidden
+        border-r border-theme
+        bg-secondary
+        transition-colors duration-300
+      "
+    >
+
+      {/* NEW CHAT */}
+      <div
+        className="
+          shrink-0
+          border-b border-theme
+          p-5
+        "
+      >
         <button
           type="button"
           onClick={onNewChat}
-          className="flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-4 py-3 font-medium text-white transition hover:scale-[1.02]"
+          className="
+            group
+            flex w-full
+            items-center justify-center
+            gap-2.5
+            rounded-lg
+            border border-theme
+            bg-tertiary
+            px-4 py-3
+            text-sm font-medium
+            text-primary
+            transition-all duration-200
+            hover:border-[#d4a72c]/50
+            hover:bg-[var(--bg-primary)]
+          "
         >
-          <Plus size={18} />
+          <Plus
+            size={17}
+            strokeWidth={2}
+            className="
+              text-[#d4a72c]
+              transition-transform duration-200
+              group-hover:rotate-90
+            "
+          />
 
-          <span>New Chat</span>
+          <span>
+            New Conversation
+          </span>
         </button>
       </div>
 
-      {/* Conversation History */}
-      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-4 py-5">
-        <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-500">
-          Conversations
-        </p>
+      {/* CONVERSATIONS */}
+      <div
+        className="
+          min-h-0 flex-1
+          overflow-y-auto
+          overflow-x-hidden
+          px-4 py-5
+        "
+      >
+
+        {/* Section Header */}
+        <div className="mb-4 flex items-center justify-between px-2">
+
+          <div className="flex items-center gap-2">
+
+            <MessageCircle
+              size={14}
+              strokeWidth={1.8}
+              className="text-muted"
+            />
+
+            <p
+              className="
+                text-[11px]
+                font-semibold
+                uppercase
+                tracking-[0.16em]
+                text-muted
+              "
+            >
+              Conversations
+            </p>
+
+          </div>
+
+          {conversations.length > 0 && (
+            <span
+              className="
+                rounded-md
+                border border-theme
+                bg-tertiary
+                px-1.5 py-0.5
+                text-[10px]
+                font-medium
+                text-muted
+              "
+            >
+              {conversations.length}
+            </span>
+          )}
+
+        </div>
 
         {/* Loading */}
         {loading && (
-          <p className="px-3 py-3 text-sm text-slate-500">
-            Loading conversations...
-          </p>
-        )}
-
-        {/* Empty State */}
-        {!loading && conversations.length === 0 && (
-          <p className="px-3 py-3 text-sm text-slate-500">
-            No conversations yet.
-          </p>
-        )}
-
-        {/* Conversations */}
-        {!loading && conversations.length > 0 && (
           <div className="space-y-2">
-            {conversations.map((conversation) => {
-              const isSelected =
-                conversation.id === selectedConversationId;
 
-              return (
-                <button
-                  type="button"
-                  key={conversation.id}
-                  onClick={() =>
-                    onSelectConversation(conversation.id)
-                  }
-                  className={`flex w-full min-w-0 items-center gap-3 rounded-xl px-3 py-3 text-left transition ${
-                    isSelected
-                      ? "bg-slate-800 text-white"
-                      : "text-slate-300 hover:bg-slate-800 hover:text-white"
-                  }`}
-                >
-                  <MessageSquare
-                    size={16}
-                    className="shrink-0"
-                  />
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="
+                  h-11
+                  animate-pulse
+                  rounded-lg
+                  bg-tertiary
+                "
+              />
+            ))}
 
-                  <span className="min-w-0 truncate">
-                    {conversation.title}
-                  </span>
-                </button>
-              );
-            })}
           </div>
         )}
+
+        {/* Empty */}
+        {!loading &&
+          conversations.length === 0 && (
+            <div
+              className="
+                mx-1
+                rounded-lg
+                border border-dashed
+                border-theme
+                bg-tertiary
+                px-4 py-6
+                text-center
+              "
+            >
+              <MessageSquare
+                size={20}
+                strokeWidth={1.5}
+                className="
+                  mx-auto mb-3
+                  text-muted
+                "
+              />
+
+              <p className="text-sm text-secondary">
+                No conversations yet
+              </p>
+
+              <p
+                className="
+                  mt-1
+                  text-xs
+                  leading-relaxed
+                  text-muted
+                "
+              >
+                Start a conversation to begin
+                working with your engineering
+                assistant.
+              </p>
+            </div>
+          )}
+
+        {/* Conversations */}
+        {!loading &&
+          conversations.length > 0 && (
+            <div className="space-y-1">
+
+              {conversations.map((conversation) => {
+
+                const isSelected =
+                  conversation.id ===
+                  selectedConversationId;
+
+                return (
+                  <button
+                    type="button"
+                    key={conversation.id}
+                    onClick={() =>
+                      onSelectConversation(
+                        conversation.id
+                      )
+                    }
+                    className={`
+                      group
+                      relative
+                      flex w-full
+                      min-w-0
+                      items-center gap-3
+                      rounded-lg
+                      px-3 py-3
+                      text-left
+                      transition-all duration-150
+
+                      ${
+                        isSelected
+                          ? `
+                            border
+                            border-[#d4a72c]/30
+                            bg-tertiary
+                            text-primary
+                          `
+                          : `
+                            border border-transparent
+                            text-secondary
+                            hover:border-theme
+                            hover:bg-tertiary
+                            hover:text-primary
+                          `
+                      }
+                    `}
+                  >
+
+                    {/* Active Indicator */}
+                    {isSelected && (
+                      <span
+                        className="
+                          absolute
+                          left-0
+                          top-1/2
+                          h-5
+                          w-0.5
+                          -translate-y-1/2
+                          rounded-full
+                          bg-[#d4a72c]
+                        "
+                      />
+                    )}
+
+                    {/* Icon */}
+                    <MessageSquare
+                      size={16}
+                      strokeWidth={1.8}
+                      className={`
+                        shrink-0
+                        transition-colors
+
+                        ${
+                          isSelected
+                            ? "text-[#d4a72c]"
+                            : "text-muted group-hover:text-primary"
+                        }
+                      `}
+                    />
+
+                    {/* Title */}
+                    <span
+                      className="
+                        min-w-0
+                        flex-1
+                        truncate
+                        text-sm
+                      "
+                    >
+                      {conversation.title}
+                    </span>
+
+                  </button>
+                );
+              })}
+
+            </div>
+          )}
+
       </div>
+
+      {/* FOOTER */}
+      <div
+        className="
+          shrink-0
+          border-t border-theme
+          px-4 py-3
+        "
+      >
+        <div
+          className="
+            flex items-center
+            justify-between
+            px-2
+          "
+        >
+          <span className="text-[10px] text-muted">
+            Engineering Chat
+          </span>
+        </div>
+      </div>
+
     </aside>
   );
 }

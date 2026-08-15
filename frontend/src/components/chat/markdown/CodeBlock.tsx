@@ -1,7 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import { Copy, Check } from "lucide-react";
+
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+
+import {
+  oneDark,
+  oneLight,
+} from "react-syntax-highlighter/dist/esm/styles/prism";
 
 interface Props {
   language: string;
@@ -13,6 +19,29 @@ export default function CodeBlock({
   value,
 }: Props) {
   const [copied, setCopied] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    const updateTheme = () => {
+      setDarkMode(
+        root.classList.contains("dark")
+      );
+    };
+
+    updateTheme();
+
+    const observer =
+      new MutationObserver(updateTheme);
+
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   async function copyCode() {
     await navigator.clipboard.writeText(value);
@@ -25,17 +54,41 @@ export default function CodeBlock({
   }
 
   return (
-    <div className="my-5 overflow-hidden rounded-xl border border-slate-700">
+    <div
+      className="
+        my-5
+        overflow-hidden
+        rounded-xl
+        border border-theme
+      "
+    >
 
-      <div className="flex items-center justify-between bg-slate-800 px-4 py-2">
-
-        <span className="text-sm font-medium text-slate-300">
+      {/* Header */}
+      <div
+        className="
+          flex items-center justify-between
+          border-b border-theme
+          bg-tertiary
+          px-4 py-2
+        "
+      >
+        <span className="text-sm font-medium text-secondary">
           {language || "text"}
         </span>
 
         <button
+          type="button"
           onClick={copyCode}
-          className="flex items-center gap-2 rounded-lg px-2 py-1 text-sm text-slate-300 transition hover:bg-slate-700"
+          className="
+            flex items-center gap-2
+            rounded-lg
+            px-2 py-1
+            text-sm
+            text-secondary
+            transition
+            hover:bg-[var(--bg-primary)]
+            hover:text-primary
+          "
         >
           {copied ? (
             <>
@@ -49,12 +102,12 @@ export default function CodeBlock({
             </>
           )}
         </button>
-
       </div>
 
+      {/* Code */}
       <SyntaxHighlighter
         language={language}
-        style={oneDark}
+        style={darkMode ? oneDark : oneLight}
         customStyle={{
           margin: 0,
           borderRadius: 0,

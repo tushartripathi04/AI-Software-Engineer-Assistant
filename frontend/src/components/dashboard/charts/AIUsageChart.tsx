@@ -25,7 +25,7 @@ const COLORS = [
 export default function AIUsageChart() {
   return (
     <Card className="p-6">
-      <h2 className="mb-6 text-xl font-semibold text-white">
+      <h2 className="mb-6 text-xl font-semibold text-primary">
         AI Usage
       </h2>
 
@@ -45,7 +45,17 @@ export default function AIUsageChart() {
               ))}
             </Pie>
 
-            <Tooltip />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "var(--card-bg)",
+                border: "1px solid var(--border)",
+                borderRadius: "8px",
+                color: "var(--text-primary)",
+              }}
+              labelStyle={{
+                color: "var(--text-secondary)",
+              }}
+            />
           </PieChart>
         </ResponsiveContainer>
       </div>

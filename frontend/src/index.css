@@ -1,7 +1,217 @@
-
 @import "tailwindcss";
+
 /* ==========================================
-   Premium Scrollbar
+   GLOBAL THEME SYSTEM
+========================================== */
+
+:root {
+  /* LIGHT THEME */
+
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+
+  --border: #e2e8f0;
+
+  --accent: #d4a72c;
+  --accent-hover: #b88d1f;
+
+  --input-bg: #ffffff;
+  --card-bg: #ffffff;
+
+  --accent-soft: rgba(212, 167, 44, 0.10);
+
+  --danger: #dc2626;
+  --danger-soft: #fef2f2;
+  --danger-hover: #fee2e2;
+  --danger-border: #fecaca;
+
+  --scrollbar-track: #f1f5f9;
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-thumb-hover: #94a3b8;
+}
+
+
+/* ==========================================
+   DARK THEME
+========================================== */
+
+html.dark {
+  --bg-primary: #080b0f;
+  --bg-secondary: #0b0f14;
+  --bg-tertiary: #11151a;
+
+  --text-primary: #e6e8eb;
+  --text-secondary: #8b949e;
+  --text-muted: #68727d;
+
+  --border: #272d35;
+
+  --accent: #d4a72c;
+  --accent-hover: #e8b83a;
+
+  --input-bg: #11151a;
+  --card-bg: #0d1116;
+
+  --accent-soft: rgba(212, 167, 44, 0.10);
+
+  --danger: #f85149;
+  --danger-soft: #171214;
+  --danger-hover: #211618;
+  --danger-border: #3a2424;
+
+  --scrollbar-track: #0b0f14;
+  --scrollbar-thumb: #272d35;
+  --scrollbar-thumb-hover: #343b44;
+}
+
+
+/* ==========================================
+   HTML / BODY
+========================================== */
+
+html {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+
+  background: var(--bg-primary);
+  color: var(--text-primary);
+
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+
+/* ==========================================
+   THEME UTILITY CLASSES
+========================================== */
+
+.bg-primary {
+  background-color: var(--bg-primary);
+}
+
+.bg-secondary {
+  background-color: var(--bg-secondary);
+}
+
+.bg-tertiary {
+  background-color: var(--bg-tertiary);
+}
+
+.bg-input {
+  background-color: var(--input-bg);
+}
+
+.bg-card {
+  background-color: var(--card-bg);
+}
+
+.bg-accent-soft {
+  background-color: var(--accent-soft);
+}
+
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.border-theme {
+  border-color: var(--border);
+}
+
+.bg-accent {
+  background-color: var(--accent);
+}
+
+.bg-accent:hover {
+  background-color: var(--accent-hover);
+}
+
+.border-accent {
+  border-color: var(--accent);
+}
+
+.border-danger {
+  border-color: var(--danger);
+}
+
+.border-danger-border {
+  border-color: var(--danger-border);
+}
+
+.bg-danger-soft {
+  background-color: var(--danger-soft);
+}
+
+.bg-danger-hover:hover {
+  background-color: var(--danger-hover);
+}
+
+.text-danger {
+  color: var(--danger);
+}
+
+
+/* ==========================================
+   GLOBAL TRANSITIONS
+========================================== */
+
+html,
+body,
+header,
+main,
+aside,
+section,
+article,
+div,
+button,
+input,
+textarea,
+select {
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+/* ==========================================
+   SELECTION
+========================================== */
+
+::selection {
+  background: rgba(212, 167, 44, 0.25);
+  color: var(--text-primary);
+}
+
+
+/* ==========================================
+   SCROLLBAR
 ========================================== */
 
 ::-webkit-scrollbar {
@@ -10,19 +220,54 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #020617;
+  background: var(--scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 999px;
+  background: var(--scrollbar-thumb);
+  border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3b82f6;
+  background: var(--scrollbar-thumb-hover);
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #334155 #020617;
+  scrollbar-color:
+    var(--scrollbar-thumb)
+    var(--scrollbar-track);
+}
+
+
+/* ==========================================
+   FORM CONTROLS
+========================================== */
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+
+/* ==========================================
+   INPUTS
+========================================== */
+
+input,
+textarea,
+select {
+  color: var(--text-primary);
+}
+
+
+/* ==========================================
+   FOCUS
+========================================== */
+
+*:focus-visible {
+  outline: 2px solid rgba(212, 167, 44, 0.6);
+  outline-offset: 2px;
 }

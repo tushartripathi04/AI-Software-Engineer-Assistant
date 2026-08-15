@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   Code2,
@@ -7,7 +6,9 @@ import {
   Sparkles,
   RotateCcw,
 } from "lucide-react";
+
 import api from "../../lib/axios";
+
 interface CodeGenerationResponse {
   language: string;
   generated_code: string;
@@ -29,44 +30,59 @@ const languages = [
 export default function CodeGenerator() {
   const [language, setLanguage] = useState("C++");
   const [prompt, setPrompt] = useState("");
+
   const [generatedCode, setGeneratedCode] = useState("");
   const [explanation, setExplanation] = useState("");
   const [complexity, setComplexity] = useState("");
+
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // ==========================================
+  // GENERATE CODE
+  // ==========================================
+
   const handleGenerate = async () => {
-  if (!prompt.trim()) return;
+    if (!prompt.trim()) {
+      return;
+    }
 
-  setLoading(true);
-  setError("");
+    setLoading(true);
+    setError("");
 
-  try {
-    const response = await api.post<CodeGenerationResponse>(
-      "/code/generate",
-      {
-        language,
-        prompt,
-      }
-    );
+    try {
+      const response = await api.post<CodeGenerationResponse>(
+        "/code/generate",
+        {
+          language,
+          prompt,
+        }
+      );
 
-    setGeneratedCode(response.data.generated_code);
-    setExplanation(response.data.explanation);
-    setComplexity(response.data.complexity);
-  } catch (error: any) {
-    console.error("Code generation failed:", error);
+      setGeneratedCode(response.data.generated_code);
+      setExplanation(response.data.explanation);
+      setComplexity(response.data.complexity);
+    } catch (error: any) {
+      console.error("Code generation failed:", error);
 
-    setError(
-      error?.response?.data?.detail ||
-        "Failed to generate code. Please try again."
-    );
-  } finally {
-    setLoading(false);
-  }
-};
+      setError(
+        error?.response?.data?.detail ||
+          "Failed to generate code. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ==========================================
+  // COPY GENERATED CODE
+  // ==========================================
+
   const handleCopy = async () => {
-    if (!generatedCode) return;
+    if (!generatedCode) {
+      return;
+    }
 
     await navigator.clipboard.writeText(generatedCode);
 
@@ -77,78 +93,166 @@ export default function CodeGenerator() {
     }, 2000);
   };
 
+  // ==========================================
+  // RESET
+  // ==========================================
+
   const handleReset = () => {
-  setPrompt("");
-  setGeneratedCode("");
-  setExplanation("");
-  setComplexity("");
-  setCopied(false);
-  setError("");
-};
+    setPrompt("");
+    setGeneratedCode("");
+    setExplanation("");
+    setComplexity("");
+    setCopied(false);
+    setError("");
+  };
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-slate-950">
+    <div
+      className="
+        flex h-full min-h-0 flex-col
+        bg-primary
+        text-primary
+        transition-colors duration-300
+      "
+    >
+      {/* ==========================================
+          HEADER
+      ========================================== */}
 
-      {/* Header */}
-      <div className="shrink-0 border-b border-slate-800 px-8 py-6">
-
+      <div
+        className="
+          shrink-0
+          border-b border-theme
+          bg-primary
+          px-8 py-6
+          transition-colors duration-300
+        "
+      >
         <div className="flex items-center gap-4">
 
-          <div className="rounded-xl bg-gradient-to-r from-blue-500 to-violet-600 p-3">
-            <Code2 size={24} className="text-white" />
+          {/* Icon */}
+
+         <div className="rounded-xl bg-[#d4a72c] p-3">
+            <Code2
+              size={24}
+              className="text-white"
+            />
           </div>
 
+          {/* Heading */}
+
           <div>
-            <h1 className="text-2xl font-bold text-white">
+            <h1 className="text-2xl font-bold text-primary">
               Code Generator
             </h1>
 
-            <p className="mt-1 text-sm text-slate-400">
+            <p className="mt-1 text-sm text-secondary">
               Generate clean and production-quality code using AI.
             </p>
           </div>
 
         </div>
-
       </div>
 
-      {/* Main Content */}
-      <div className="min-h-0 flex-1 overflow-y-auto p-6 lg:p-8">
+      {/* ==========================================
+          MAIN CONTENT
+      ========================================== */}
 
-        <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-2">
+      <div
+        className="
+          min-h-0
+          flex-1
+          overflow-y-auto
+          bg-primary
+          p-6
+          lg:p-8
+          transition-colors duration-300
+        "
+      >
+        <div
+          className="
+            mx-auto
+            grid
+            max-w-7xl
+            gap-6
+            lg:grid-cols-2
+          "
+        >
 
-          {/* Left Panel */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+          {/* ==========================================
+              LEFT PANEL
+          ========================================== */}
+
+          <div
+            className="
+              rounded-2xl
+              border border-theme
+              bg-secondary
+              p-6
+              shadow-sm
+              transition-colors duration-300
+            "
+          >
+
+            {/* Panel Header */}
 
             <div className="mb-6 flex items-center gap-3">
-              <Sparkles size={20} className="text-blue-400" />
 
-              <h2 className="text-lg font-semibold text-white">
+              <Sparkles
+                size={20}
+                className="text-blue-500"
+              />
+
+              <h2 className="text-lg font-semibold text-primary">
                 Code Requirements
               </h2>
+
             </div>
 
-            {/* Language */}
+            {/* ==========================================
+                LANGUAGE
+            ========================================== */}
+
             <div className="mb-6">
 
-              <label className="mb-2 block text-sm font-medium text-slate-300">
+              <label
+                className="
+                  mb-2
+                  block
+                  text-sm
+                  font-medium
+                  text-secondary
+                "
+              >
                 Programming Language
               </label>
 
               <select
                 value={language}
-                onChange={(e) => setLanguage(e.target.value)}
+                onChange={(e) =>
+                  setLanguage(e.target.value)
+                }
                 className="
-                  w-full rounded-xl border border-slate-700
-                  bg-slate-950 px-4 py-3
-                  text-sm text-white outline-none
-                  transition
+                  w-full
+                  rounded-xl
+                  border border-theme
+                  bg-input
+                  px-4 py-3
+                  text-sm
+                  text-primary
+                  outline-none
+                  transition-all duration-200
+
                   focus:border-blue-500
-                  focus:ring-1 focus:ring-blue-500
+                  focus:ring-1
+                  focus:ring-blue-500/30
                 "
               >
                 {languages.map((item) => (
-                  <option key={item} value={item}>
+                  <option
+                    key={item}
+                    value={item}
+                  >
                     {item}
                   </option>
                 ))}
@@ -156,79 +260,134 @@ export default function CodeGenerator() {
 
             </div>
 
-            {/* Prompt */}
+            {/* ==========================================
+                PROMPT
+            ========================================== */}
+
             <div className="mb-6">
 
-              <label className="mb-2 block text-sm font-medium text-slate-300">
+              <label
+                className="
+                  mb-2
+                  block
+                  text-sm
+                  font-medium
+                  text-secondary
+                "
+              >
                 Describe what you want to build
               </label>
 
               <textarea
                 value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
+                onChange={(e) =>
+                  setPrompt(e.target.value)
+                }
                 placeholder="Example: Create a binary search implementation for a sorted array..."
                 rows={12}
                 className="
-                  w-full resize-none rounded-xl border border-slate-700
-                  bg-slate-950 px-4 py-3
-                  text-sm leading-6 text-white
-                  placeholder:text-slate-600
-                  outline-none transition
+                  w-full
+                  resize-none
+                  rounded-xl
+                  border border-theme
+                  bg-input
+                  px-4 py-3
+                  text-sm
+                  leading-6
+                  text-primary
+
+                  placeholder:text-muted
+
+                  outline-none
+                  transition-all duration-200
+
                   focus:border-blue-500
-                  focus:ring-1 focus:ring-blue-500
+                  focus:ring-1
+                  focus:ring-blue-500/30
                 "
               />
 
             </div>
 
-            {/* Buttons */}
+            {/* ==========================================
+                ACTION BUTTONS
+            ========================================== */}
+
             <div className="flex gap-3">
 
-          <button
-  type="button"
-  onClick={handleGenerate}
-  disabled={!prompt.trim() || loading}
-  className="
-    flex flex-1 items-center justify-center gap-2
-    rounded-xl px-5 py-3
-    text-sm font-semibold text-white
-    transition
-    disabled:cursor-not-allowed
-    disabled:opacity-40
-    bg-gradient-to-r from-blue-600 to-indigo-600
-    hover:from-blue-500
-    hover:to-indigo-500
-  "
->
-  {loading ? (
-    <>
-      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-      Generating...
-    </>
-  ) : (
-    <>
-      <Sparkles size={18} />
-      Generate Code
-    </>
-  )}
-</button>
-{error && (
-  <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
-    {error}
-  </div>
-)}
+              {/* Generate */}
+
+              <button
+                type="button"
+                onClick={handleGenerate}
+                disabled={!prompt.trim() || loading}
+                className="
+                  flex
+                  flex-1
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-xl
+            
+                  text-sm
+                  font-semibold
+                  text-white
+
+                 
+                  transition-colors
+                  disabled:cursor-not-allowed
+                  disabled:opacity-40
+                     bg-[#d4a72c]
+                 hover:bg-[#c49a25]
+
+                "
+              >
+                {loading ? (
+                  <>
+                    <span
+                      className="
+                        h-4
+                        w-4
+                        animate-spin
+                        rounded-full
+                        border-2
+                        border-white
+                        border-t-transparent
+                      "
+                    />
+
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={18} />
+                    Generate Code
+                  </>
+                )}
+              </button>
+
+              {/* Reset */}
 
               <button
                 type="button"
                 onClick={handleReset}
                 className="
-                  flex items-center justify-center gap-2
-                  rounded-xl border border-slate-700
-                  bg-slate-900 px-5 py-3
-                  text-sm font-medium text-slate-300
-                  transition
-                  hover:bg-slate-800
-                  hover:text-white
+                  flex
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-xl
+                  border border-theme
+                  bg-secondary
+                  px-5 py-3
+                  text-sm
+                  font-medium
+                  text-secondary
+
+                  transition-all duration-200
+
+                  hover:bg-tertiary
+                  hover:text-primary
                 "
               >
                 <RotateCcw size={17} />
@@ -237,49 +396,114 @@ export default function CodeGenerator() {
 
             </div>
 
+            {/* ==========================================
+                ERROR
+            ========================================== */}
+
+            {error && (
+              <div
+                className="
+                  mt-4
+                  rounded-xl
+                  border
+                  border-red-500/20
+                  bg-red-500/10
+                  px-4 py-3
+                  text-sm
+                  text-red-500
+                "
+              >
+                {error}
+              </div>
+            )}
+
           </div>
 
-          {/* Right Panel */}
+          {/* ==========================================
+              RIGHT PANEL
+          ========================================== */}
+
           <div className="flex flex-col gap-6">
 
-            {/* Generated Code */}
-            <div className="flex min-h-[420px] flex-col rounded-2xl border border-slate-800 bg-slate-900/60">
+            {/* ==========================================
+                GENERATED CODE
+            ========================================== */}
 
-              <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
+            <div
+              className="
+                flex
+                min-h-[420px]
+                flex-col
+                rounded-2xl
+                border border-theme
+                bg-secondary
+                transition-colors duration-300
+              "
+            >
+
+              {/* Header */}
+
+              <div
+                className="
+                  flex
+                  items-center
+                  justify-between
+                  border-b border-theme
+                  px-5 py-4
+                "
+              >
 
                 <div>
-                  <h2 className="font-semibold text-white">
+
+                  <h2 className="font-semibold text-primary">
                     Generated Code
                   </h2>
 
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-muted">
                     {language}
                   </p>
+
                 </div>
+
+                {/* Copy */}
 
                 <button
                   type="button"
                   onClick={handleCopy}
                   disabled={!generatedCode}
                   className="
-                    flex items-center gap-2 rounded-lg
-                    border border-slate-700
-                    px-3 py-2 text-xs
-                    text-slate-300
-                    transition
-                    hover:bg-slate-800
+                    flex
+                    items-center
+                    gap-2
+                    rounded-lg
+                    border border-theme
+                    bg-secondary
+                    px-3 py-2
+                    text-xs
+                    text-secondary
+
+                    transition-all duration-200
+
+                    hover:bg-tertiary
+                    hover:text-primary
+
                     disabled:cursor-not-allowed
                     disabled:opacity-40
                   "
                 >
                   {copied ? (
                     <>
-                      <Check size={15} />
+                      <Check
+                        size={15}
+                        className="text-emerald-500"
+                      />
+
                       Copied
                     </>
                   ) : (
                     <>
                       <Copy size={15} />
+
                       Copy
                     </>
                   )}
@@ -287,28 +511,57 @@ export default function CodeGenerator() {
 
               </div>
 
-              <div className="min-h-0 flex-1 overflow-auto p-5">
+              {/* Code Area */}
+
+              <div
+                className="
+                  min-h-0
+                  flex-1
+                  overflow-auto
+                  bg-input
+                  p-5
+                  rounded-b-2xl
+                "
+              >
 
                 {generatedCode ? (
-                  <pre className="whitespace-pre-wrap font-mono text-sm leading-6 text-slate-300">
+                  <pre
+                    className="
+                      whitespace-pre-wrap
+                      font-mono
+                      text-sm
+                      leading-6
+                      text-primary
+                    "
+                  >
                     {generatedCode}
                   </pre>
                 ) : (
-                  <div className="flex h-full min-h-[330px] items-center justify-center">
-
+                  <div
+                    className="
+                      flex
+                      h-full
+                      min-h-[330px]
+                      items-center
+                      justify-center
+                    "
+                  >
                     <div className="text-center">
 
                       <Code2
                         size={42}
-                        className="mx-auto mb-4 text-slate-700"
+                        className="
+                          mx-auto
+                          mb-4
+                          text-muted
+                        "
                       />
 
-                      <p className="text-sm text-slate-500">
+                      <p className="text-sm text-muted">
                         Generated code will appear here
                       </p>
 
                     </div>
-
                   </div>
                 )}
 
@@ -316,27 +569,62 @@ export default function CodeGenerator() {
 
             </div>
 
-            {/* Explanation */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+            {/* ==========================================
+                EXPLANATION
+            ========================================== */}
 
-              <h2 className="mb-3 font-semibold text-white">
+            <div
+              className="
+                rounded-2xl
+                border border-theme
+                bg-secondary
+                p-5
+                transition-colors duration-300
+              "
+            >
+
+              <h2 className="mb-3 font-semibold text-primary">
                 Explanation
               </h2>
 
-              <p className="text-sm leading-6 text-slate-400">
-                {explanation || "AI explanation will appear here after code generation."}
+              <p
+                className="
+                  text-sm
+                  leading-6
+                  text-secondary
+                "
+              >
+                {explanation ||
+                  "AI explanation will appear here after code generation."}
               </p>
 
             </div>
 
-            {/* Complexity */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+            {/* ==========================================
+                COMPLEXITY
+            ========================================== */}
 
-              <h2 className="mb-3 font-semibold text-white">
+            <div
+              className="
+                rounded-2xl
+                border border-theme
+                bg-secondary
+                p-5
+                transition-colors duration-300
+              "
+            >
+
+              <h2 className="mb-3 font-semibold text-primary">
                 Time Complexity
               </h2>
 
-              <p className="font-mono text-sm text-blue-400">
+              <p
+                className="
+                  font-mono
+                  text-sm
+                  text-blue-500
+                "
+              >
                 {complexity || "—"}
               </p>
 
@@ -345,9 +633,7 @@ export default function CodeGenerator() {
           </div>
 
         </div>
-
       </div>
-
     </div>
   );
 }

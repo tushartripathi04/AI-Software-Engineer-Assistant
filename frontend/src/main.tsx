@@ -7,17 +7,17 @@ import App from "./App";
 
 import QueryProvider from "./app/providers/QueryProvider";
 import { Toaster } from "sonner";
-
-
+import { ThemeProvider } from "./context/ThemeContext";
 
 createRoot(document.getElementById("root")!).render(
- <StrictMode>
+  <StrictMode>
     <BrowserRouter>
       <QueryProvider>
-        <App />
-        <Toaster richColors position="top-right" />
+        <ThemeProvider>
+          <App />
+          <Toaster richColors position="top-right" />
+        </ThemeProvider>
       </QueryProvider>
     </BrowserRouter>
   </StrictMode>
 );
-  

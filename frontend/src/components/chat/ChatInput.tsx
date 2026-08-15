@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import {
   Paperclip,
   Mic,
@@ -23,39 +24,92 @@ export default function ChatInput({
   }
 
   return (
-    <div className="border-t border-slate-800 bg-slate-950 p-6">
-      <div className="flex items-center gap-3 rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3">
+    <div
+      className="
+        border-t border-theme
+        bg-primary
+        p-6
+        transition-colors duration-300
+      "
+    >
+      <div
+        className="
+          flex items-center gap-3
+          rounded-2xl
+          border border-theme
+          bg-input
+          px-4 py-3
+          transition-colors duration-300
+        "
+      >
 
-        <button className="rounded-lg p-2 transition hover:bg-slate-800">
+        {/* Attachment */}
+        <button
+          type="button"
+          className="
+            rounded-lg
+            p-2
+            transition
+            hover:bg-tertiary
+          "
+        >
           <Paperclip
             size={20}
-            className="text-slate-400"
+            className="text-secondary"
           />
         </button>
 
+        {/* Input */}
         <input
           type="text"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) =>
+            setMessage(e.target.value)
+          }
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               handleSend();
             }
           }}
           placeholder="Ask anything about software engineering..."
-          className="flex-1 bg-transparent text-white outline-none placeholder:text-slate-500"
+          className="
+            flex-1
+            bg-transparent
+            text-primary
+            outline-none
+            placeholder:text-muted
+          "
         />
 
-        <button className="rounded-lg p-2 transition hover:bg-slate-800">
+        {/* Microphone */}
+        <button
+          type="button"
+          className="
+            rounded-lg
+            p-2
+            transition
+            hover:bg-tertiary
+          "
+        >
           <Mic
             size={20}
-            className="text-slate-400"
+            className="text-secondary"
           />
         </button>
 
+        {/* Send */}
         <button
+          type="button"
           onClick={handleSend}
-          className="rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 p-3 transition hover:scale-105"
+          className="
+            rounded-xl
+            bg-gradient-to-r
+            from-blue-600
+            to-violet-600
+            p-3
+            transition
+            hover:scale-105
+          "
         >
           <SendHorizonal
             size={20}

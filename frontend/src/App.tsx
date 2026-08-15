@@ -22,6 +22,7 @@ import InterviewAssistant from "./pages/InterviewAssistant/InterviewAssistant";
 import CodeExplainer from "./pages/CodeExplainer/CodeExplainer";
 import ComplexityAnalyzer from "./pages/ComplexityAnalyzer/ComplexityAnalyzer";
 import GitAssistant from "./pages/GitAssistant/GitAssistant";
+import Settings from "./pages/Settings/Settings";
 export default function App() {
   return (
     <Routes>
@@ -201,6 +202,16 @@ export default function App() {
     <ProtectedRoute>
       <DashboardLayout>
         <GitAssistant />
+      </DashboardLayout>
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/settings"
+  element={
+    <ProtectedRoute>
+      <DashboardLayout>
+        <Settings />
       </DashboardLayout>
     </ProtectedRoute>
   }

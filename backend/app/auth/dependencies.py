@@ -12,43 +12,7 @@ oauth2_scheme = OAuth2PasswordBearer(
 )
 
 
-# def get_current_user(
-#     token: str = Depends(oauth2_scheme),
-#     db: Session = Depends(get_db),
-# ):
-#     """
-#     Get the currently authenticated user.
-#     """
 
-#     credentials_exception = HTTPException(
-#         status_code=status.HTTP_401_UNAUTHORIZED,
-#         detail="Could not validate credentials",
-#     )
-
-#     try:
-#         payload = decode_access_token(token)
-
-#         user_id = payload.get("sub")
-
-#         if user_id is None:
-#             raise credentials_exception
-
-#     except JWTError:
-#         raise credentials_exception
-
-#     user = UserRepository.get_by_id(
-#         db,
-#         user_id,
-#     )
-
-#     if user is None:
-#         raise credentials_exception
-
-#     return user
-
-
-# we add new one and remove the old one to avoid circular import issues
-# from app.models.user import User
 def get_current_user(
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db),

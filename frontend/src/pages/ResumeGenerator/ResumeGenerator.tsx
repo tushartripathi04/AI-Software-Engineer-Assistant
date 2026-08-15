@@ -7,7 +7,9 @@ import {
   RotateCcw,
   Sparkles,
 } from "lucide-react";
+
 import api from "../../lib/axios";
+
 interface ResumeGenerationResponse {
   project_name: string;
   resume_description: string;
@@ -30,6 +32,11 @@ export default function ResumeGenerator() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // ==========================================
+  // COPY
+  // ==========================================
+
   const handleCopy = async (
     text: string,
     section: string
@@ -45,6 +52,10 @@ export default function ResumeGenerator() {
     }, 2000);
   };
 
+  // ==========================================
+  // RESET
+  // ==========================================
+
   const handleReset = () => {
     setProjectName("");
     setTechStack("");
@@ -58,101 +69,191 @@ export default function ResumeGenerator() {
     setCopiedSection("");
     setError("");
   };
+
+  // ==========================================
+  // GENERATE
+  // ==========================================
+
   const handleGenerate = async () => {
-  if (
-    !projectName.trim() ||
-    !techStack.trim() ||
-    !description.trim()
-  ) {
-    return;
-  }
+    if (
+      !projectName.trim() ||
+      !techStack.trim() ||
+      !description.trim()
+    ) {
+      return;
+    }
 
-  setLoading(true);
-  setError("");
+    setLoading(true);
+    setError("");
 
-  try {
-    const response = await api.post<ResumeGenerationResponse>(
-      "/resume/generate",
-      {
-        project_name: projectName,
-        tech_stack: techStack,
-        description,
-      }
-    );
+    try {
+      const response =
+        await api.post<ResumeGenerationResponse>(
+          "/resume/generate",
+          {
+            project_name: projectName,
+            tech_stack: techStack,
+            description,
+          }
+        );
 
-    const data = response.data;
+      const data = response.data;
 
-    setResumeDescription(data.resume_description);
-    setLinkedinDescription(data.linkedin_description);
-    setPortfolioDescription(data.portfolio_description);
-    setAtsBulletPoints(data.ats_bullet_points);
-  } catch (error: any) {
-    console.error("Resume generation failed:", error);
+      setResumeDescription(data.resume_description);
+      setLinkedinDescription(data.linkedin_description);
+      setPortfolioDescription(data.portfolio_description);
+      setAtsBulletPoints(data.ats_bullet_points);
+    } catch (error: any) {
+      console.error(
+        "Resume generation failed:",
+        error
+      );
 
-    setError(
-      error?.response?.data?.detail ||
-        "Failed to generate resume content. Please try again."
-    );
-  } finally {
-    setLoading(false);
-  }
-};
+      setError(
+        error?.response?.data?.detail ||
+          "Failed to generate resume content. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-slate-950">
+    <div
+      className="
+        flex h-full min-h-0 flex-col
+        bg-primary text-primary
+      "
+    >
+      {/* ==========================================
+          HEADER
+      ========================================== */}
 
-      {/* Header */}
-      <div className="shrink-0 border-b border-slate-800 px-8 py-6">
-
+      <div
+        className="
+          shrink-0
+          border-b border-theme
+          bg-primary
+          px-8 py-6
+        "
+      >
         <div className="flex items-center gap-4">
 
-          <div className="rounded-xl bg-gradient-to-r from-blue-500 to-violet-600 p-3">
+          {/* Icon */}
+
+          <div
+            className="
+              flex h-12 w-12 shrink-0
+              items-center justify-center
+              rounded-xl
+              border border-[#d4a72c]/20
+              bg-[#1b1810]
+            "
+          >
             <BriefcaseBusiness
               size={24}
-              className="text-white"
+              strokeWidth={1.8}
+              className="text-[#d4a72c]"
             />
           </div>
 
+          {/* Title */}
+
           <div>
-            <h1 className="text-2xl font-bold text-white">
+            <h1
+              className="
+                text-2xl font-bold
+                tracking-tight
+                text-primary
+              "
+            >
               Resume Generator
             </h1>
 
-            <p className="mt-1 text-sm text-slate-400">
+            <p
+              className="
+                mt-1 text-sm
+                text-secondary
+              "
+            >
               Generate resume-ready project descriptions,
-              LinkedIn content, portfolio content, and ATS bullet points.
+              LinkedIn content, portfolio content, and ATS
+              bullet points.
             </p>
           </div>
 
         </div>
-
       </div>
 
-      {/* Main Content */}
-      <div className="min-h-0 flex-1 overflow-y-auto p-6 lg:p-8">
+      {/* ==========================================
+          MAIN CONTENT
+      ========================================== */}
 
-        <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-2">
+      <div
+        className="
+          min-h-0 flex-1
+          overflow-y-auto
+          bg-primary
+          p-6 lg:p-8
+        "
+      >
+        <div
+          className="
+            mx-auto
+            grid max-w-7xl
+            gap-6
+            lg:grid-cols-2
+          "
+        >
 
-          {/* Left Panel */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+          {/* ==========================================
+              LEFT — PROJECT INFORMATION
+          ========================================== */}
 
-            <div className="mb-6 flex items-center gap-3">
+          <div
+            className="
+              rounded-2xl
+              border border-theme
+              bg-secondary
+              p-6
+            "
+          >
 
+            {/* Section Header */}
+
+            <div
+              className="
+                mb-6
+                flex items-center gap-3
+              "
+            >
               <Sparkles
                 size={20}
-                className="text-blue-400"
+                strokeWidth={1.8}
+                className="text-[#d4a72c]"
               />
 
-              <h2 className="text-lg font-semibold text-white">
+              <h2
+                className="
+                  text-lg font-semibold
+                  text-primary
+                "
+              >
                 Project Information
               </h2>
-
             </div>
 
             {/* Project Name */}
+
             <div className="mb-6">
 
-              <label className="mb-2 block text-sm font-medium text-slate-300">
+              <label
+                className="
+                  mb-2 block
+                  text-sm font-medium
+                  text-secondary
+                "
+              >
                 Project Name
               </label>
 
@@ -164,22 +265,33 @@ export default function ResumeGenerator() {
                 }
                 placeholder="Example: AI Software Engineer Assistant"
                 className="
-                  w-full rounded-xl border border-slate-700
-                  bg-slate-950 px-4 py-3
-                  text-sm text-white
-                  placeholder:text-slate-600
-                  outline-none transition
-                  focus:border-blue-500
-                  focus:ring-1 focus:ring-blue-500
+                  w-full rounded-xl
+                  border border-theme
+                  bg-input
+                  px-4 py-3
+                  text-sm text-primary
+                  placeholder:text-muted
+                  outline-none
+                  transition-all
+                  focus:border-[#d4a72c]/60
+                  focus:ring-1
+                  focus:ring-[#d4a72c]/20
                 "
               />
 
             </div>
 
-            {/* Tech Stack */}
+            {/* Technology Stack */}
+
             <div className="mb-6">
 
-              <label className="mb-2 block text-sm font-medium text-slate-300">
+              <label
+                className="
+                  mb-2 block
+                  text-sm font-medium
+                  text-secondary
+                "
+              >
                 Technology Stack
               </label>
 
@@ -191,22 +303,33 @@ export default function ResumeGenerator() {
                 }
                 placeholder="Example: React, TypeScript, FastAPI, PostgreSQL, Groq"
                 className="
-                  w-full rounded-xl border border-slate-700
-                  bg-slate-950 px-4 py-3
-                  text-sm text-white
-                  placeholder:text-slate-600
-                  outline-none transition
-                  focus:border-blue-500
-                  focus:ring-1 focus:ring-blue-500
+                  w-full rounded-xl
+                  border border-theme
+                  bg-input
+                  px-4 py-3
+                  text-sm text-primary
+                  placeholder:text-muted
+                  outline-none
+                  transition-all
+                  focus:border-[#d4a72c]/60
+                  focus:ring-1
+                  focus:ring-[#d4a72c]/20
                 "
               />
 
             </div>
 
             {/* Description */}
+
             <div className="mb-6">
 
-              <label className="mb-2 block text-sm font-medium text-slate-300">
+              <label
+                className="
+                  mb-2 block
+                  text-sm font-medium
+                  text-secondary
+                "
+              >
                 Project Description
               </label>
 
@@ -218,70 +341,96 @@ export default function ResumeGenerator() {
                 placeholder="Describe your project, its purpose, major features, and the problem it solves..."
                 rows={17}
                 className="
-                  w-full resize-none rounded-xl border border-slate-700
-                  bg-slate-950 px-4 py-3
-                  text-sm leading-6 text-white
-                  placeholder:text-slate-600
-                  outline-none transition
-                  focus:border-blue-500
-                  focus:ring-1 focus:ring-blue-500
+                  w-full resize-none
+                  rounded-xl
+                  border border-theme
+                  bg-input
+                  px-4 py-3
+                  text-sm leading-6
+                  text-primary
+                  placeholder:text-muted
+                  outline-none
+                  transition-all
+                  focus:border-[#d4a72c]/60
+                  focus:ring-1
+                  focus:ring-[#d4a72c]/20
                 "
               />
 
             </div>
 
-            {/* Buttons */}
+            {/* ==========================================
+                ACTIONS
+            ========================================== */}
+
             <div className="flex gap-3">
 
-           <button
-  type="button"
-  onClick={handleGenerate}
-  disabled={
-    !projectName.trim() ||
-    !techStack.trim() ||
-    !description.trim() ||
-    loading
-  }
-  className="
-    flex flex-1 items-center justify-center gap-2
-    rounded-xl px-5 py-3
-    text-sm font-semibold text-white
-    transition
-    disabled:cursor-not-allowed
-    disabled:opacity-40
-    bg-gradient-to-r from-blue-600 to-indigo-600
-    hover:from-blue-500
-    hover:to-indigo-500
-  "
->
-  {loading ? (
-    <>
-      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-      Generating...
-    </>
-  ) : (
-    <>
-      <Sparkles size={18} />
-      Generate Resume Content
-    </>
-  )}
-</button>
-{error && (
-  <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
-    {error}
-  </div>
-)}
+              {/* Generate */}
+
+              <button
+                type="button"
+                onClick={handleGenerate}
+                disabled={
+                  !projectName.trim() ||
+                  !techStack.trim() ||
+                  !description.trim() ||
+                  loading
+                }
+                className="
+                  flex flex-1
+                  items-center justify-center
+                  gap-2
+                  rounded-xl
+                  bg-[#d4a72c]
+                  px-5 py-3
+                  text-sm font-semibold
+                  text-[#17130a]
+                  transition-all
+                  hover:bg-[#e8b83a]
+                  disabled:cursor-not-allowed
+                  disabled:opacity-40
+                "
+              >
+                {loading ? (
+                  <>
+                    <span
+                      className="
+                        h-4 w-4
+                        animate-spin
+                        rounded-full
+                        border-2
+                        border-[#17130a]
+                        border-t-transparent
+                      "
+                    />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={18} />
+                    Generate Resume Content
+                  </>
+                )}
+              </button>
+
+              {/* Reset */}
+
               <button
                 type="button"
                 onClick={handleReset}
                 className="
-                  flex items-center justify-center gap-2
-                  rounded-xl border border-slate-700
-                  bg-slate-900 px-5 py-3
-                  text-sm font-medium text-slate-300
-                  transition
-                  hover:bg-slate-800
-                  hover:text-white
+                  flex items-center
+                  justify-center gap-2
+                  rounded-xl
+                  border border-theme
+                  bg-tertiary
+                  px-5 py-3
+                  text-sm font-medium
+                  text-secondary
+                  transition-all
+                  hover:border-[#d4a72c]/40
+                  hover:bg-secondary
+                  hover:text-primary
                 "
               >
                 <RotateCcw size={17} />
@@ -290,64 +439,91 @@ export default function ResumeGenerator() {
 
             </div>
 
+            {/* Error */}
+
+            {error && (
+              <div
+                className="
+                  mt-4
+                  rounded-xl
+                  border border-red-500/20
+                  bg-red-500/10
+                  px-4 py-3
+                  text-sm
+                  text-red-500
+                "
+              >
+                {error}
+              </div>
+            )}
+
           </div>
 
-          {/* Right Panel */}
+          {/* ==========================================
+              RIGHT — GENERATED CONTENT
+          ========================================== */}
+
           <div className="flex flex-col gap-5">
 
-            {/* Resume Description */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60">
+            {/* ==========================================
+                RESUME DESCRIPTION
+            ========================================== */}
 
-              <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
+            <div
+              className="
+                rounded-2xl
+                border border-theme
+                bg-secondary
+              "
+            >
+
+              <div
+                className="
+                  flex items-center
+                  justify-between
+                  border-b border-theme
+                  px-5 py-4
+                "
+              >
 
                 <div>
-                  <h2 className="font-semibold text-white">
+                  <h2
+                    className="
+                      font-semibold
+                      text-primary
+                    "
+                  >
                     Resume Description
                   </h2>
 
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p
+                    className="
+                      mt-1 text-xs
+                      text-muted
+                    "
+                  >
                     Professional project description
                   </p>
                 </div>
 
-                <button
-                  type="button"
-                  disabled={!resumeDescription}
-                  onClick={() =>
-                    handleCopy(
-                      resumeDescription,
-                      "resume"
-                    )
-                  }
-                  className="
-                    flex items-center gap-2 rounded-lg
-                    border border-slate-700
-                    px-3 py-2 text-xs
-                    text-slate-300
-                    transition
-                    hover:bg-slate-800
-                    disabled:cursor-not-allowed
-                    disabled:opacity-40
-                  "
-                >
-                  {copiedSection === "resume" ? (
-                    <>
-                      <Check size={15} />
-                      Copied
-                    </>
-                  ) : (
-                    <>
-                      <Copy size={15} />
-                      Copy
-                    </>
-                  )}
-                </button>
+                <CopyButton
+                  text={resumeDescription}
+                  section="resume"
+                  copiedSection={copiedSection}
+                  onCopy={handleCopy}
+                />
 
               </div>
 
               <div className="p-5">
 
-                <p className="whitespace-pre-wrap text-sm leading-6 text-slate-400">
+                <p
+                  className="
+                    whitespace-pre-wrap
+                    text-sm leading-6
+                    text-secondary
+                  "
+                >
                   {resumeDescription ||
                     "Resume-ready project description will appear here."}
                 </p>
@@ -356,59 +532,65 @@ export default function ResumeGenerator() {
 
             </div>
 
-            {/* LinkedIn Description */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60">
+            {/* ==========================================
+                LINKEDIN DESCRIPTION
+            ========================================== */}
 
-              <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
+            <div
+              className="
+                rounded-2xl
+                border border-theme
+                bg-secondary
+              "
+            >
+
+              <div
+                className="
+                  flex items-center
+                  justify-between
+                  border-b border-theme
+                  px-5 py-4
+                "
+              >
 
                 <div>
-                  <h2 className="font-semibold text-white">
+                  <h2
+                    className="
+                      font-semibold
+                      text-primary
+                    "
+                  >
                     LinkedIn Description
                   </h2>
 
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p
+                    className="
+                      mt-1 text-xs
+                      text-muted
+                    "
+                  >
                     Professional LinkedIn project content
                   </p>
                 </div>
 
-                <button
-                  type="button"
-                  disabled={!linkedinDescription}
-                  onClick={() =>
-                    handleCopy(
-                      linkedinDescription,
-                      "linkedin"
-                    )
-                  }
-                  className="
-                    flex items-center gap-2 rounded-lg
-                    border border-slate-700
-                    px-3 py-2 text-xs
-                    text-slate-300
-                    transition
-                    hover:bg-slate-800
-                    disabled:cursor-not-allowed
-                    disabled:opacity-40
-                  "
-                >
-                  {copiedSection === "linkedin" ? (
-                    <>
-                      <Check size={15} />
-                      Copied
-                    </>
-                  ) : (
-                    <>
-                      <Copy size={15} />
-                      Copy
-                    </>
-                  )}
-                </button>
+                <CopyButton
+                  text={linkedinDescription}
+                  section="linkedin"
+                  copiedSection={copiedSection}
+                  onCopy={handleCopy}
+                />
 
               </div>
 
               <div className="p-5">
 
-                <p className="whitespace-pre-wrap text-sm leading-6 text-slate-400">
+                <p
+                  className="
+                    whitespace-pre-wrap
+                    text-sm leading-6
+                    text-secondary
+                  "
+                >
                   {linkedinDescription ||
                     "LinkedIn project description will appear here."}
                 </p>
@@ -417,59 +599,65 @@ export default function ResumeGenerator() {
 
             </div>
 
-            {/* Portfolio Description */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60">
+            {/* ==========================================
+                PORTFOLIO DESCRIPTION
+            ========================================== */}
 
-              <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
+            <div
+              className="
+                rounded-2xl
+                border border-theme
+                bg-secondary
+              "
+            >
+
+              <div
+                className="
+                  flex items-center
+                  justify-between
+                  border-b border-theme
+                  px-5 py-4
+                "
+              >
 
                 <div>
-                  <h2 className="font-semibold text-white">
+                  <h2
+                    className="
+                      font-semibold
+                      text-primary
+                    "
+                  >
                     Portfolio Description
                   </h2>
 
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p
+                    className="
+                      mt-1 text-xs
+                      text-muted
+                    "
+                  >
                     Portfolio-ready project content
                   </p>
                 </div>
 
-                <button
-                  type="button"
-                  disabled={!portfolioDescription}
-                  onClick={() =>
-                    handleCopy(
-                      portfolioDescription,
-                      "portfolio"
-                    )
-                  }
-                  className="
-                    flex items-center gap-2 rounded-lg
-                    border border-slate-700
-                    px-3 py-2 text-xs
-                    text-slate-300
-                    transition
-                    hover:bg-slate-800
-                    disabled:cursor-not-allowed
-                    disabled:opacity-40
-                  "
-                >
-                  {copiedSection === "portfolio" ? (
-                    <>
-                      <Check size={15} />
-                      Copied
-                    </>
-                  ) : (
-                    <>
-                      <Copy size={15} />
-                      Copy
-                    </>
-                  )}
-                </button>
+                <CopyButton
+                  text={portfolioDescription}
+                  section="portfolio"
+                  copiedSection={copiedSection}
+                  onCopy={handleCopy}
+                />
 
               </div>
 
               <div className="p-5">
 
-                <p className="whitespace-pre-wrap text-sm leading-6 text-slate-400">
+                <p
+                  className="
+                    whitespace-pre-wrap
+                    text-sm leading-6
+                    text-secondary
+                  "
+                >
                   {portfolioDescription ||
                     "Portfolio project description will appear here."}
                 </p>
@@ -478,57 +666,55 @@ export default function ResumeGenerator() {
 
             </div>
 
-            {/* ATS Bullet Points */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60">
+            {/* ==========================================
+                ATS BULLET POINTS
+            ========================================== */}
 
-              <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
+            <div
+              className="
+                rounded-2xl
+                border border-theme
+                bg-secondary
+              "
+            >
+
+              <div
+                className="
+                  flex items-center
+                  justify-between
+                  border-b border-theme
+                  px-5 py-4
+                "
+              >
 
                 <div>
-                  <h2 className="font-semibold text-white">
+                  <h2
+                    className="
+                      font-semibold
+                      text-primary
+                    "
+                  >
                     ATS Bullet Points
                   </h2>
 
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p
+                    className="
+                      mt-1 text-xs
+                      text-muted
+                    "
+                  >
                     Resume-friendly achievement bullets
                   </p>
                 </div>
 
-                <button
-                  type="button"
-                  disabled={atsBulletPoints.length === 0}
-                  onClick={() =>
-                    handleCopy(
-                      atsBulletPoints
-                        .map(
-                          (point) => `• ${point}`
-                        )
-                        .join("\n"),
-                      "ats"
-                    )
-                  }
-                  className="
-                    flex items-center gap-2 rounded-lg
-                    border border-slate-700
-                    px-3 py-2 text-xs
-                    text-slate-300
-                    transition
-                    hover:bg-slate-800
-                    disabled:cursor-not-allowed
-                    disabled:opacity-40
-                  "
-                >
-                  {copiedSection === "ats" ? (
-                    <>
-                      <Check size={15} />
-                      Copied
-                    </>
-                  ) : (
-                    <>
-                      <Copy size={15} />
-                      Copy
-                    </>
-                  )}
-                </button>
+                <CopyButton
+                  text={atsBulletPoints
+                    .map((point) => `• ${point}`)
+                    .join("\n")}
+                  section="ats"
+                  copiedSection={copiedSection}
+                  onCopy={handleCopy}
+                />
 
               </div>
 
@@ -542,11 +728,18 @@ export default function ResumeGenerator() {
                         <li
                           key={index}
                           className="
-                            flex gap-3 text-sm
-                            leading-6 text-slate-400
+                            flex gap-3
+                            text-sm leading-6
+                            text-secondary
                           "
                         >
-                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-400" />
+                          <span
+                            className="
+                              mt-2 h-1.5 w-1.5
+                              shrink-0 rounded-full
+                              bg-[#d4a72c]
+                            "
+                          />
 
                           <span>{point}</span>
                         </li>
@@ -555,7 +748,11 @@ export default function ResumeGenerator() {
 
                   </ul>
                 ) : (
-                  <p className="text-sm text-slate-500">
+                  <p
+                    className="
+                      text-sm text-muted
+                    "
+                  >
                     ATS-optimized bullet points will appear here.
                   </p>
                 )}
@@ -567,9 +764,63 @@ export default function ResumeGenerator() {
           </div>
 
         </div>
-
       </div>
-
     </div>
+  );
+}
+
+/* ==========================================
+   COPY BUTTON
+========================================== */
+
+interface CopyButtonProps {
+  text: string;
+  section: string;
+  copiedSection: string;
+  onCopy: (
+    text: string,
+    section: string
+  ) => void;
+}
+
+function CopyButton({
+  text,
+  section,
+  copiedSection,
+  onCopy,
+}: CopyButtonProps) {
+  return (
+    <button
+      type="button"
+      disabled={!text}
+      onClick={() => onCopy(text, section)}
+      className="
+        flex items-center
+        gap-2 rounded-lg
+        border border-theme
+        bg-input
+        px-3 py-2
+        text-xs
+        text-secondary
+        transition-all
+        hover:border-[#d4a72c]/40
+        hover:bg-tertiary
+        hover:text-primary
+        disabled:cursor-not-allowed
+        disabled:opacity-40
+      "
+    >
+      {copiedSection === section ? (
+        <>
+          <Check size={15} />
+          Copied
+        </>
+      ) : (
+        <>
+          <Copy size={15} />
+          Copy
+        </>
+      )}
+    </button>
   );
 }

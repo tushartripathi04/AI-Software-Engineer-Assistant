@@ -1,4 +1,5 @@
 import Card from "@/components/common/Card";
+
 import {
   CheckCircle2,
   GitPullRequest,
@@ -32,7 +33,7 @@ const activities = [
 export default function RecentActivity() {
   return (
     <Card className="p-6">
-      <h2 className="mb-6 text-xl font-semibold text-white">
+      <h2 className="mb-6 text-xl font-semibold text-primary">
         Recent Activity
       </h2>
 
@@ -43,28 +44,44 @@ export default function RecentActivity() {
           return (
             <div
               key={activity.title}
-              className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-900 p-4 transition hover:border-blue-500"
+              className="
+                flex items-center justify-between
+                rounded-xl
+                border border-theme
+                bg-secondary
+                p-4
+                transition
+                hover:border-blue-500
+              "
             >
               <div className="flex items-center gap-4">
                 <div className="rounded-xl bg-blue-500/20 p-3">
                   <Icon
                     size={20}
-                    className="text-blue-400"
+                    className="text-blue-500"
                   />
                 </div>
 
                 <div>
-                  <p className="font-medium text-white">
+                  <p className="font-medium text-primary">
                     {activity.title}
                   </p>
 
-                  <p className="text-sm text-slate-400">
+                  <p className="text-sm text-secondary">
                     {activity.time}
                   </p>
                 </div>
               </div>
 
-              <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-xs text-emerald-400">
+              <span
+                className="
+                  rounded-full
+                  bg-emerald-500/20
+                  px-3 py-1
+                  text-xs
+                  text-emerald-500
+                "
+              >
                 Success
               </span>
             </div>

@@ -11,17 +11,22 @@ const Card = ({ children, className }: CardProps) => {
     <div
       className={clsx(
         "rounded-2xl",
-        "border border-slate-800",
-        "bg-slate-900/70",
-        "backdrop-blur-xl",
-        "shadow-xl",
+
+        // Theme-aware border and background
+        "border border-slate-200",
+        "bg-[var(--bg-primary)]",
+
+        // Appearance
+        "shadow-lg",
         "transition-all",
         "duration-300",
-        "hover:-translate-y-2",
-        "hover:scale-[1.02]",
-        "hover:border-blue-500/40",
-        "hover:shadow-2xl",
-        "hover:shadow-blue-500/10",
+
+        // Hover
+        "hover:-translate-y-1",
+        "hover:scale-[1.01]",
+        "hover:border-blue-400",
+        "hover:shadow-xl",
+
         className
       )}
     >

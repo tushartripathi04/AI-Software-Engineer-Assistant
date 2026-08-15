@@ -1,18 +1,82 @@
+import { Bot, Circle } from "lucide-react";
+
 export default function ChatHeader() {
   return (
-    <div className="flex h-20 items-center justify-between border-b border-slate-800 bg-slate-950 px-6">
-      <div>
-        <h2 className="text-xl font-semibold text-white">
-          AI Software Engineer
-        </h2>
+    <div
+      className="
+        flex h-20 shrink-0
+        items-center justify-between
+        border-b border-theme
+        bg-secondary
+        px-6
+        transition-colors duration-300
+      "
+    >
+      {/* Left */}
+      <div className="flex items-center gap-3">
 
-        <p className="text-sm text-slate-400">
-          Chat Assistant
-        </p>
+        {/* Assistant Icon */}
+        <div
+          className="
+            flex h-11 w-11
+            items-center justify-center
+            rounded-xl
+            border border-theme
+            bg-tertiary
+          "
+        >
+          <Bot
+            size={20}
+            className="text-[#d4a72c]"
+          />
+        </div>
+
+        {/* Title */}
+        <div>
+          <div className="flex items-center gap-2">
+
+            <h2 className="text-base font-semibold text-primary">
+              Engineering Assistant
+            </h2>
+
+            <Circle
+              size={7}
+              fill="currentColor"
+              className="text-emerald-400"
+            />
+
+          </div>
+
+          <p className="text-xs text-muted">
+            AI-powered software engineering workspace
+          </p>
+        </div>
+
       </div>
 
-      <div className="rounded-lg bg-blue-600/20 px-3 py-2 text-sm text-blue-400">
-        GPT-4
+      {/* AI Engine */}
+      <div
+        className="
+          flex items-center gap-2
+          rounded-lg
+          border border-theme
+          bg-tertiary
+          px-3 py-2
+        "
+      >
+        <Circle
+          size={7}
+          fill="currentColor"
+          className="text-[#d4a72c]"
+        />
+
+        <span className="text-sm text-secondary">
+          Groq Engine
+        </span>
+
+        <span className="text-muted">
+          ▾
+        </span>
       </div>
     </div>
   );

@@ -6,7 +6,9 @@ import {
   RotateCcw,
   Sparkles,
 } from "lucide-react";
+
 import api from "../../lib/axios";
+
 interface ComplexityResponse {
   time_complexity: string;
   space_complexity: string;
@@ -40,9 +42,13 @@ export default function ComplexityAnalyzer() {
     useState("");
 
   const [copied, setCopied] = useState(false);
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // ==========================================
+  // COPY RESULT
+  // ==========================================
+
   const handleCopy = async () => {
     const text = `
 Time Complexity:
@@ -75,6 +81,10 @@ ${alternativeApproach}
     }, 2000);
   };
 
+  // ==========================================
+  // RESET
+  // ==========================================
+
   const handleReset = () => {
     setLanguage("C++");
     setCode("");
@@ -89,100 +99,193 @@ ${alternativeApproach}
     setCopied(false);
     setError("");
   };
-const handleAnalyze = async () => {
-  if (!code.trim()) {
-    return;
-  }
 
-  setLoading(true);
-  setError("");
+  // ==========================================
+  // ANALYZE
+  // ==========================================
 
-  try {
-    const response = await api.post<ComplexityResponse>(
-      "/complexity/analyze",
-      {
-        language,
-        code,
-      }
-    );
+  const handleAnalyze = async () => {
+    if (!code.trim()) {
+      return;
+    }
 
-    const data = response.data;
+    setLoading(true);
+    setError("");
 
-    setTimeComplexity(data.time_complexity);
-    setSpaceComplexity(data.space_complexity);
-    setExplanation(data.explanation);
-    setBottlenecks(data.bottlenecks);
-    setOptimizations(data.optimizations);
-    setAlternativeApproach(data.alternative_approach);
-  } catch (error: any) {
-    console.error(
-      "Complexity analysis failed:",
-      error
-    );
+    try {
+      const response = await api.post<ComplexityResponse>(
+        "/complexity/analyze",
+        {
+          language,
+          code,
+        }
+      );
 
-    setError(
-      error?.response?.data?.detail ||
-        "Failed to analyze complexity. Please try again."
-    );
-  } finally {
-    setLoading(false);
-  }
-};
+      const data = response.data;
+
+      setTimeComplexity(data.time_complexity);
+      setSpaceComplexity(data.space_complexity);
+      setExplanation(data.explanation);
+      setBottlenecks(data.bottlenecks);
+      setOptimizations(data.optimizations);
+      setAlternativeApproach(data.alternative_approach);
+    } catch (error: any) {
+      console.error(
+        "Complexity analysis failed:",
+        error
+      );
+
+      setError(
+        error?.response?.data?.detail ||
+          "Failed to analyze complexity. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="flex h-full min-h-0 flex-col bg-slate-950">
+    <div
+      className="
+        flex h-full min-h-0 flex-col
+        bg-primary
+        text-primary
+      "
+    >
+      {/* ==========================================
+          HEADER
+      ========================================== */}
 
-      {/* Header */}
-      <div className="shrink-0 border-b border-slate-800 px-8 py-6">
-
+      <div
+        className="
+          shrink-0
+          border-b border-theme
+          bg-primary
+          px-6 py-6
+          lg:px-8
+        "
+      >
         <div className="flex items-center gap-4">
 
-          <div className="rounded-xl bg-gradient-to-r from-blue-500 to-violet-600 p-3">
+          {/* Icon */}
+
+          <div
+            className="
+              flex h-12 w-12 shrink-0
+              items-center justify-center
+              rounded-xl
+              border border-[#d4a72c]/20
+              bg-[#1b1810]
+            "
+          >
             <Gauge
               size={24}
-              className="text-white"
+              strokeWidth={1.8}
+              className="text-[#d4a72c]"
             />
           </div>
 
-          <div>
-            <h1 className="text-2xl font-bold text-white">
+          {/* Title */}
+
+          <div className="min-w-0">
+
+            <h1
+              className="
+                text-2xl font-bold tracking-tight
+                text-primary
+              "
+            >
               Complexity Analyzer
             </h1>
 
-            <p className="mt-1 text-sm text-slate-400">
-              Analyze time and space complexity, identify bottlenecks,
-              and discover optimization strategies using AI.
+            <p
+              className="
+                mt-1 max-w-3xl
+                text-sm leading-6
+                text-secondary
+              "
+            >
+              Analyze time and space complexity, identify
+              bottlenecks, and discover optimization strategies
+              using AI.
             </p>
+
           </div>
 
         </div>
-
       </div>
 
-      {/* Main Content */}
-      <div className="min-h-0 flex-1 overflow-y-auto p-6 lg:p-8">
+      {/* ==========================================
+          MAIN CONTENT
+      ========================================== */}
 
-        <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-2">
+      <div
+        className="
+          min-h-0 flex-1
+          overflow-y-auto
+          bg-primary
+          p-6
+          lg:p-8
+        "
+      >
 
-          {/* Left Panel */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+        <div
+          className="
+            mx-auto
+            grid max-w-7xl
+            gap-6
+            lg:grid-cols-2
+          "
+        >
+
+          {/* ==========================================
+              LEFT — CODE INPUT
+          ========================================== */}
+
+          <div
+            className="
+              rounded-2xl
+              border border-theme
+              bg-secondary
+              p-6
+              shadow-sm
+            "
+          >
+
+            {/* Section Header */}
 
             <div className="mb-6 flex items-center gap-3">
 
               <Sparkles
                 size={20}
-                className="text-blue-400"
+                strokeWidth={1.8}
+                className="text-[#d4a72c]"
               />
 
-              <h2 className="text-lg font-semibold text-white">
+              <h2
+                className="
+                  text-lg font-semibold
+                  text-primary
+                "
+              >
                 Code to Analyze
               </h2>
 
             </div>
 
-            {/* Language */}
+            {/* ==========================================
+                LANGUAGE
+            ========================================== */}
+
             <div className="mb-6">
 
-              <label className="mb-2 block text-sm font-medium text-slate-300">
+              <label
+                className="
+                  mb-2 block
+                  text-sm font-medium
+                  text-primary
+                "
+              >
                 Programming Language
               </label>
 
@@ -192,12 +295,18 @@ const handleAnalyze = async () => {
                   setLanguage(e.target.value)
                 }
                 className="
-                  w-full rounded-xl border border-slate-700
-                  bg-slate-950 px-4 py-3
-                  text-sm text-white
-                  outline-none transition
-                  focus:border-blue-500
-                  focus:ring-1 focus:ring-blue-500
+                  w-full
+                  rounded-xl
+                  border border-theme
+                  bg-input
+                  px-4 py-3
+                  text-sm
+                  text-primary
+                  outline-none
+                  transition-all
+                  focus:border-[#d4a72c]/60
+                  focus:ring-1
+                  focus:ring-[#d4a72c]/20
                 "
               >
                 {languages.map((item) => (
@@ -212,10 +321,19 @@ const handleAnalyze = async () => {
 
             </div>
 
-            {/* Code */}
+            {/* ==========================================
+                CODE
+            ========================================== */}
+
             <div className="mb-6">
 
-              <label className="mb-2 block text-sm font-medium text-slate-300">
+              <label
+                className="
+                  mb-2 block
+                  text-sm font-medium
+                  text-primary
+                "
+              >
                 Paste Your Code
               </label>
 
@@ -227,69 +345,118 @@ const handleAnalyze = async () => {
                 placeholder="Paste the code you want to analyze..."
                 rows={20}
                 className="
-                  w-full resize-none rounded-xl border border-slate-700
-                  bg-slate-950 px-4 py-3
-                  font-mono text-sm leading-6 text-white
-                  placeholder:text-slate-600
-                  outline-none transition
-                  focus:border-blue-500
-                  focus:ring-1 focus:ring-blue-500
+                  w-full
+                  resize-none
+                  rounded-xl
+                  border border-theme
+                  bg-input
+                  px-4 py-3
+                  font-mono
+                  text-sm
+                  leading-6
+                  text-primary
+                  placeholder:text-muted
+                  outline-none
+                  transition-all
+                  focus:border-[#d4a72c]/60
+                  focus:ring-1
+                  focus:ring-[#d4a72c]/20
                 "
               />
 
             </div>
 
-            {/* Buttons */}
+            {/* ==========================================
+                ERROR
+            ========================================== */}
+
+            {error && (
+              <div
+                className="
+                  mb-4
+                  rounded-xl
+                  border border-red-500/20
+                  bg-red-500/10
+                  px-4 py-3
+                  text-sm
+                  text-red-500
+                "
+              >
+                {error}
+              </div>
+            )}
+
+            {/* ==========================================
+                BUTTONS
+            ========================================== */}
+
             <div className="flex gap-3">
 
+              {/* Analyze */}
+
               <button
-  type="button"
-  onClick={handleAnalyze}
-  disabled={!code.trim() || loading}
-  className="
-    flex flex-1 items-center justify-center gap-2
-    rounded-xl px-5 py-3
-    text-sm font-semibold text-white
-    transition
-    disabled:cursor-not-allowed
-    disabled:opacity-40
-    bg-gradient-to-r from-blue-600 to-indigo-600
-    hover:from-blue-500
-    hover:to-indigo-500
-  "
->
-  {loading ? (
-    <>
-      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-      Analyzing...
-    </>
-  ) : (
-    <>
-      <Sparkles size={18} />
-      Analyze Complexity
-    </>
-  )}
-</button>
-{error && (
-  <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
-    {error}
-  </div>
-)}
+                type="button"
+                onClick={handleAnalyze}
+                disabled={!code.trim() || loading}
+                className="
+                  flex flex-1
+                  items-center justify-center gap-2
+                  rounded-xl
+                  bg-[#d4a72c]
+                  px-5 py-3
+                  text-sm font-semibold
+                  text-[#17130a]
+                  transition-all
+                  hover:bg-[#e8b83a]
+                  disabled:cursor-not-allowed
+                  disabled:opacity-40
+                "
+              >
+                {loading ? (
+                  <>
+                    <span
+                      className="
+                        h-4 w-4
+                        animate-spin
+                        rounded-full
+                        border-2
+                        border-[#17130a]
+                        border-t-transparent
+                      "
+                    />
+
+                    Analyzing...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={18} />
+                    Analyze Complexity
+                  </>
+                )}
+              </button>
+
+              {/* Reset */}
 
               <button
                 type="button"
                 onClick={handleReset}
                 className="
-                  flex items-center justify-center gap-2
-                  rounded-xl border border-slate-700
-                  bg-slate-900 px-5 py-3
-                  text-sm font-medium text-slate-300
-                  transition
-                  hover:bg-slate-800
-                  hover:text-white
+                  flex
+                  items-center justify-center gap-2
+                  rounded-xl
+                  border border-theme
+                  bg-tertiary
+                  px-5 py-3
+                  text-sm font-medium
+                  text-secondary
+                  transition-all
+                  hover:border-[#d4a72c]/40
+                  hover:bg-secondary
+                  hover:text-primary
                 "
               >
                 <RotateCcw size={17} />
+
                 Reset
               </button>
 
@@ -297,35 +464,71 @@ const handleAnalyze = async () => {
 
           </div>
 
-          {/* Right Panel */}
+          {/* ==========================================
+              RIGHT — RESULTS
+          ========================================== */}
+
           <div className="flex flex-col gap-5">
 
-            {/* Header / Copy */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60">
+            {/* ==========================================
+                RESULT HEADER
+            ========================================== */}
 
-              <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
+            <div
+              className="
+                rounded-2xl
+                border border-theme
+                bg-secondary
+              "
+            >
+
+              <div
+                className="
+                  flex items-center justify-between
+                  border-b border-theme
+                  px-5 py-4
+                "
+              >
 
                 <div>
-                  <h2 className="font-semibold text-white">
+
+                  <h2
+                    className="
+                      font-semibold
+                      text-primary
+                    "
+                  >
                     Complexity Analysis
                   </h2>
 
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p
+                    className="
+                      mt-1 text-xs
+                      text-muted
+                    "
+                  >
                     AI-generated complexity analysis
                   </p>
+
                 </div>
+
+                {/* Copy */}
 
                 <button
                   type="button"
                   disabled={!timeComplexity}
                   onClick={handleCopy}
                   className="
-                    flex items-center gap-2 rounded-lg
-                    border border-slate-700
-                    px-3 py-2 text-xs
-                    text-slate-300
-                    transition
-                    hover:bg-slate-800
+                    flex items-center gap-2
+                    rounded-lg
+                    border border-theme
+                    bg-tertiary
+                    px-3 py-2
+                    text-xs
+                    text-secondary
+                    transition-all
+                    hover:border-[#d4a72c]/40
+                    hover:text-primary
                     disabled:cursor-not-allowed
                     disabled:opacity-40
                   "
@@ -347,28 +550,73 @@ const handleAnalyze = async () => {
 
             </div>
 
-            {/* Complexity Cards */}
+            {/* ==========================================
+                COMPLEXITY CARDS
+            ========================================== */}
+
             <div className="grid gap-5 sm:grid-cols-2">
 
-              <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+              {/* Time */}
 
-                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+              <div
+                className="
+                  rounded-2xl
+                  border border-theme
+                  bg-secondary
+                  p-5
+                "
+              >
+
+                <p
+                  className="
+                    text-xs font-medium
+                    uppercase tracking-wide
+                    text-muted
+                  "
+                >
                   Time Complexity
                 </p>
 
-                <p className="mt-3 text-2xl font-bold text-blue-400">
+                <p
+                  className="
+                    mt-3
+                    text-2xl font-bold
+                    text-[#d4a72c]
+                  "
+                >
                   {timeComplexity || "—"}
                 </p>
 
               </div>
 
-              <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+              {/* Space */}
 
-                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+              <div
+                className="
+                  rounded-2xl
+                  border border-theme
+                  bg-secondary
+                  p-5
+                "
+              >
+
+                <p
+                  className="
+                    text-xs font-medium
+                    uppercase tracking-wide
+                    text-muted
+                  "
+                >
                   Space Complexity
                 </p>
 
-                <p className="mt-3 text-2xl font-bold text-violet-400">
+                <p
+                  className="
+                    mt-3
+                    text-2xl font-bold
+                    text-[#b894e8]
+                  "
+                >
                   {spaceComplexity || "—"}
                 </p>
 
@@ -376,56 +624,148 @@ const handleAnalyze = async () => {
 
             </div>
 
-            {/* Explanation */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+            {/* ==========================================
+                EXPLANATION
+            ========================================== */}
 
-              <h2 className="mb-3 font-semibold text-white">
+            <div
+              className="
+                rounded-2xl
+                border border-theme
+                bg-secondary
+                p-5
+              "
+            >
+
+              <h2
+                className="
+                  mb-3
+                  font-semibold
+                  text-primary
+                "
+              >
                 Explanation
               </h2>
 
-              <p className="whitespace-pre-wrap text-sm leading-6 text-slate-400">
+              <p
+                className="
+                  whitespace-pre-wrap
+                  text-sm
+                  leading-6
+                  text-secondary
+                "
+              >
                 {explanation ||
                   "A detailed explanation of the complexity will appear here."}
               </p>
 
             </div>
 
-            {/* Bottlenecks */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+            {/* ==========================================
+                BOTTLENECKS
+            ========================================== */}
 
-              <h2 className="mb-3 font-semibold text-white">
+            <div
+              className="
+                rounded-2xl
+                border border-theme
+                bg-secondary
+                p-5
+              "
+            >
+
+              <h2
+                className="
+                  mb-3
+                  font-semibold
+                  text-primary
+                "
+              >
                 Bottlenecks
               </h2>
 
-              <p className="whitespace-pre-wrap text-sm leading-6 text-slate-400">
+              <p
+                className="
+                  whitespace-pre-wrap
+                  text-sm
+                  leading-6
+                  text-secondary
+                "
+              >
                 {bottlenecks ||
                   "Potential performance bottlenecks will appear here."}
               </p>
 
             </div>
 
-            {/* Optimizations */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+            {/* ==========================================
+                OPTIMIZATIONS
+            ========================================== */}
 
-              <h2 className="mb-3 font-semibold text-white">
+            <div
+              className="
+                rounded-2xl
+                border border-theme
+                bg-secondary
+                p-5
+              "
+            >
+
+              <h2
+                className="
+                  mb-3
+                  font-semibold
+                  text-primary
+                "
+              >
                 Optimizations
               </h2>
 
-              <p className="whitespace-pre-wrap text-sm leading-6 text-slate-400">
+              <p
+                className="
+                  whitespace-pre-wrap
+                  text-sm
+                  leading-6
+                  text-secondary
+                "
+              >
                 {optimizations ||
                   "Optimization recommendations will appear here."}
               </p>
 
             </div>
 
-            {/* Alternative Approach */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+            {/* ==========================================
+                ALTERNATIVE APPROACH
+            ========================================== */}
 
-              <h2 className="mb-3 font-semibold text-white">
+            <div
+              className="
+                rounded-2xl
+                border border-theme
+                bg-secondary
+                p-5
+              "
+            >
+
+              <h2
+                className="
+                  mb-3
+                  font-semibold
+                  text-primary
+                "
+              >
                 Alternative Approach
               </h2>
 
-              <p className="whitespace-pre-wrap text-sm leading-6 text-slate-400">
+              <p
+                className="
+                  whitespace-pre-wrap
+                  text-sm
+                  leading-6
+                  text-secondary
+                "
+              >
                 {alternativeApproach ||
                   "An alternative algorithm or implementation approach will appear here."}
               </p>

@@ -15,7 +15,8 @@ export interface LoginResponse {
 }
 
 export interface User {
-  id: number;
-  username: string;
+  id: string;
+  full_name: string;
   email: string;
+  is_active: boolean;
 }

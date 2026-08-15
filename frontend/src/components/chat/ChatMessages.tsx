@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
+
 import type { ChatMessage } from "@/types/chat";
+
 import ChatBubble from "./messages/ChatBubble";
 
 interface Props {
@@ -9,7 +11,8 @@ interface Props {
 export default function ChatMessages({
   messages,
 }: Props) {
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const messagesEndRef =
+    useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({
@@ -19,8 +22,19 @@ export default function ChatMessages({
   }, [messages]);
 
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-8 py-6">
+    <div
+      className="
+        min-h-0
+        flex-1
+        overflow-y-auto
+        overflow-x-hidden
+        bg-primary
+        px-8 py-6
+        transition-colors duration-300
+      "
+    >
       <div className="space-y-6">
+
         {messages.map((message) => (
           <ChatBubble
             key={message.id}
@@ -28,8 +42,8 @@ export default function ChatMessages({
           />
         ))}
 
-        {/* Auto-scroll target */}
         <div ref={messagesEndRef} />
+
       </div>
     </div>
   );

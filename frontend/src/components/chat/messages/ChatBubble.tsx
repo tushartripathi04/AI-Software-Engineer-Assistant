@@ -1,4 +1,4 @@
-import type  { ChatMessage } from "@/types/chat";
+import type { ChatMessage } from "@/types/chat";
 
 import UserMessage from "./UserMessage";
 import AssistantMessage from "./AssistantMessage";
@@ -11,8 +11,16 @@ export default function ChatBubble({
   message,
 }: Props) {
   if (message.role === "user") {
-    return <UserMessage message={message} />;
+    return (
+      <UserMessage
+        message={message}
+      />
+    );
   }
 
-  return <AssistantMessage message={message} />;
+  return (
+    <AssistantMessage
+      message={message}
+    />
+  );
 }

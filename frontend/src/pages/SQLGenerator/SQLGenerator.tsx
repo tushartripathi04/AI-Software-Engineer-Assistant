@@ -6,7 +6,9 @@ import {
   RotateCcw,
   Sparkles,
 } from "lucide-react";
+
 import api from "../../lib/axios";
+
 interface SQLGenerationResponse {
   database: string;
   sql_query: string;
@@ -35,6 +37,11 @@ export default function SQLGenerator() {
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // ==========================================
+  // COPY SQL
+  // ==========================================
+
   const handleCopy = async () => {
     if (!sqlQuery) return;
 
@@ -47,6 +54,10 @@ export default function SQLGenerator() {
     }, 2000);
   };
 
+  // ==========================================
+  // RESET
+  // ==========================================
+
   const handleReset = () => {
     setPrompt("");
     setSqlQuery("");
@@ -56,83 +67,177 @@ export default function SQLGenerator() {
     setCopied(false);
     setError("");
   };
+
+  // ==========================================
+  // GENERATE SQL
+  // ==========================================
+
   const handleGenerate = async () => {
-  if (!prompt.trim()) return;
+    if (!prompt.trim()) return;
 
-  setLoading(true);
-  setError("");
+    setLoading(true);
+    setError("");
 
-  try {
-    const response = await api.post<SQLGenerationResponse>(
-      "/sql/generate",
-      {
-        database,
-        prompt,
-      }
-    );
+    try {
+      const response = await api.post<SQLGenerationResponse>(
+        "/sql/generate",
+        {
+          database,
+          prompt,
+        }
+      );
 
-    setSqlQuery(response.data.sql_query);
-    setExplanation(response.data.explanation);
-    setQueryType(response.data.query_type);
-    setOptimizationTips(response.data.optimization_tips);
-  } catch (error: any) {
-    console.error("SQL generation failed:", error);
+      setSqlQuery(response.data.sql_query);
+      setExplanation(response.data.explanation);
+      setQueryType(response.data.query_type);
+      setOptimizationTips(response.data.optimization_tips);
+    } catch (error: any) {
+      console.error("SQL generation failed:", error);
 
-    setError(
-      error?.response?.data?.detail ||
-        "Failed to generate SQL. Please try again."
-    );
-  } finally {
-    setLoading(false);
-  }
-};
+      setError(
+        error?.response?.data?.detail ||
+          "Failed to generate SQL. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-slate-950">
+    <div
+      className="
+        flex h-full min-h-0 flex-col
+        bg-primary
+        text-primary
+      "
+    >
+      {/* ==========================================
+          HEADER
+      ========================================== */}
 
-      {/* Header */}
-      <div className="shrink-0 border-b border-slate-800 px-8 py-6">
-
+      <div
+        className="
+          shrink-0
+          border-b border-theme
+          bg-primary
+          px-8 py-6
+        "
+      >
         <div className="flex items-center gap-4">
 
-          <div className="rounded-xl bg-gradient-to-r from-blue-500 to-violet-600 p-3">
-            <Database size={24} className="text-white" />
+          {/* Icon */}
+
+          <div
+            className="
+              flex h-12 w-12 shrink-0
+              items-center justify-center
+              rounded-xl
+              border border-[#d4a72c]/20
+              bg-[#1b1810]
+            "
+          >
+            <Database
+              size={24}
+              strokeWidth={1.8}
+              className="text-[#d4a72c]"
+            />
           </div>
 
+          {/* Heading */}
+
           <div>
-            <h1 className="text-2xl font-bold text-white">
+            <h1
+              className="
+                text-2xl font-bold tracking-tight
+                text-primary
+              "
+            >
               SQL Generator
             </h1>
 
-            <p className="mt-1 text-sm text-slate-400">
+            <p
+              className="
+                mt-1 text-sm
+                text-secondary
+              "
+            >
               Generate optimized SQL queries from natural language using AI.
             </p>
           </div>
 
         </div>
-
       </div>
 
-      {/* Main Content */}
-      <div className="min-h-0 flex-1 overflow-y-auto p-6 lg:p-8">
+      {/* ==========================================
+          MAIN CONTENT
+      ========================================== */}
 
-        <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-2">
+      <div
+        className="
+          min-h-0 flex-1
+          overflow-y-auto
+          bg-primary
+          p-6
+          lg:p-8
+        "
+      >
+        <div
+          className="
+            mx-auto
+            grid max-w-7xl
+            gap-6
+            lg:grid-cols-2
+          "
+        >
 
-          {/* Left Panel */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+          {/* ==========================================
+              LEFT PANEL
+          ========================================== */}
+
+          <div
+            className="
+              rounded-2xl
+              border border-theme
+              bg-secondary
+              p-6
+              shadow-sm
+            "
+          >
+
+            {/* Section Header */}
 
             <div className="mb-6 flex items-center gap-3">
-              <Sparkles size={20} className="text-blue-400" />
 
-              <h2 className="text-lg font-semibold text-white">
+              <Sparkles
+                size={20}
+                strokeWidth={1.8}
+                className="text-[#d4a72c]"
+              />
+
+              <h2
+                className="
+                  text-lg font-semibold
+                  text-primary
+                "
+              >
                 SQL Requirements
               </h2>
+
             </div>
 
-            {/* Database */}
+            {/* ==========================================
+                DATABASE
+            ========================================== */}
+
             <div className="mb-6">
 
-              <label className="mb-2 block text-sm font-medium text-slate-300">
+              <label
+                className="
+                  mb-2 block
+                  text-sm font-medium
+                  text-primary
+                "
+              >
                 Database
               </label>
 
@@ -140,12 +245,18 @@ export default function SQLGenerator() {
                 value={database}
                 onChange={(e) => setDatabase(e.target.value)}
                 className="
-                  w-full rounded-xl border border-slate-700
-                  bg-slate-950 px-4 py-3
-                  text-sm text-white outline-none
-                  transition
-                  focus:border-blue-500
-                  focus:ring-1 focus:ring-blue-500
+                  w-full
+                  rounded-xl
+                  border border-theme
+                  bg-input
+                  px-4 py-3
+                  text-sm
+                  text-primary
+                  outline-none
+                  transition-all
+                  focus:border-[#d4a72c]/60
+                  focus:ring-1
+                  focus:ring-[#d4a72c]/20
                 "
               >
                 {databases.map((item) => (
@@ -157,10 +268,19 @@ export default function SQLGenerator() {
 
             </div>
 
-            {/* Prompt */}
+            {/* ==========================================
+                PROMPT
+            ========================================== */}
+
             <div className="mb-6">
 
-              <label className="mb-2 block text-sm font-medium text-slate-300">
+              <label
+                className="
+                  mb-2 block
+                  text-sm font-medium
+                  text-primary
+                "
+              >
                 Describe Your Query
               </label>
 
@@ -170,66 +290,113 @@ export default function SQLGenerator() {
                 placeholder="Example: Find all employees whose salary is greater than 50000 and sort them by salary in descending order."
                 rows={18}
                 className="
-                  w-full resize-none rounded-xl border border-slate-700
-                  bg-slate-950 px-4 py-3
-                  text-sm leading-6 text-white
-                  placeholder:text-slate-600
-                  outline-none transition
-                  focus:border-blue-500
-                  focus:ring-1 focus:ring-blue-500
+                  w-full
+                  resize-none
+                  rounded-xl
+                  border border-theme
+                  bg-input
+                  px-4 py-3
+                  text-sm
+                  leading-6
+                  text-primary
+                  placeholder:text-muted
+                  outline-none
+                  transition-all
+                  focus:border-[#d4a72c]/60
+                  focus:ring-1
+                  focus:ring-[#d4a72c]/20
                 "
               />
 
             </div>
 
-            {/* Buttons */}
+            {/* ==========================================
+                ERROR
+            ========================================== */}
+
+            {error && (
+              <div
+                className="
+                  mb-4
+                  rounded-xl
+                  border border-red-500/20
+                  bg-red-500/10
+                  px-4 py-3
+                  text-sm
+                  text-red-500
+                "
+              >
+                {error}
+              </div>
+            )}
+
+            {/* ==========================================
+                ACTIONS
+            ========================================== */}
+
             <div className="flex gap-3">
 
+              {/* Generate */}
+
               <button
-  type="button"
-  onClick={handleGenerate}
-  disabled={!prompt.trim() || loading}
-  className="
-    flex flex-1 items-center justify-center gap-2
-    rounded-xl px-5 py-3
-    text-sm font-semibold text-white
-    transition
-    disabled:cursor-not-allowed
-    disabled:opacity-40
-    bg-gradient-to-r from-blue-600 to-indigo-600
-    hover:from-blue-500
-    hover:to-indigo-500
-  "
->
-  {loading ? (
-    <>
-      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-      Generating...
-    </>
-  ) : (
-    <>
-      <Sparkles size={18} />
-      Generate SQL
-    </>
-  )}
-</button>
-{error && (
-  <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
-    {error}
-  </div>
-)}
+                type="button"
+                onClick={handleGenerate}
+                disabled={!prompt.trim() || loading}
+                className="
+                  flex flex-1
+                  items-center justify-center gap-2
+                  rounded-xl
+                  bg-[#d4a72c]
+                  px-5 py-3
+                  text-sm font-semibold
+                  text-[#17130a]
+                  transition-all
+                  hover:bg-[#e8b83a]
+                  disabled:cursor-not-allowed
+                  disabled:opacity-40
+                "
+              >
+                {loading ? (
+                  <>
+                    <span
+                      className="
+                        h-4 w-4
+                        animate-spin
+                        rounded-full
+                        border-2
+                        border-[#17130a]
+                        border-t-transparent
+                      "
+                    />
+
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={18} />
+                    Generate SQL
+                  </>
+                )}
+              </button>
+
+              {/* Reset */}
 
               <button
                 type="button"
                 onClick={handleReset}
                 className="
-                  flex items-center justify-center gap-2
-                  rounded-xl border border-slate-700
-                  bg-slate-900 px-5 py-3
-                  text-sm font-medium text-slate-300
-                  transition
-                  hover:bg-slate-800
-                  hover:text-white
+                  flex
+                  items-center justify-center gap-2
+                  rounded-xl
+                  border border-theme
+                  bg-tertiary
+                  px-5 py-3
+                  text-sm font-medium
+                  text-secondary
+                  transition-all
+                  hover:border-[#d4a72c]/40
+                  hover:bg-secondary
+                  hover:text-primary
                 "
               >
                 <RotateCcw size={17} />
@@ -240,35 +407,75 @@ export default function SQLGenerator() {
 
           </div>
 
-          {/* Right Panel */}
+          {/* ==========================================
+              RIGHT PANEL
+          ========================================== */}
+
           <div className="flex flex-col gap-6">
 
-            {/* Generated SQL */}
-            <div className="flex min-h-[380px] flex-col rounded-2xl border border-slate-800 bg-slate-900/60">
+            {/* ==========================================
+                GENERATED SQL
+            ========================================== */}
 
-              <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
+            <div
+              className="
+                flex min-h-[380px]
+                flex-col
+                rounded-2xl
+                border border-theme
+                bg-secondary
+              "
+            >
+
+              {/* Header */}
+
+              <div
+                className="
+                  flex items-center justify-between
+                  border-b border-theme
+                  px-5 py-4
+                "
+              >
 
                 <div>
-                  <h2 className="font-semibold text-white">
+
+                  <h2
+                    className="
+                      font-semibold
+                      text-primary
+                    "
+                  >
                     Generated SQL
                   </h2>
 
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p
+                    className="
+                      mt-1 text-xs
+                      text-muted
+                    "
+                  >
                     AI-generated SQL query
                   </p>
+
                 </div>
+
+                {/* Copy */}
 
                 <button
                   type="button"
                   onClick={handleCopy}
                   disabled={!sqlQuery}
                   className="
-                    flex items-center gap-2 rounded-lg
-                    border border-slate-700
-                    px-3 py-2 text-xs
-                    text-slate-300
-                    transition
-                    hover:bg-slate-800
+                    flex items-center gap-2
+                    rounded-lg
+                    border border-theme
+                    bg-tertiary
+                    px-3 py-2
+                    text-xs
+                    text-secondary
+                    transition-all
+                    hover:border-[#d4a72c]/40
+                    hover:text-primary
                     disabled:cursor-not-allowed
                     disabled:opacity-40
                   "
@@ -288,23 +495,52 @@ export default function SQLGenerator() {
 
               </div>
 
-              <div className="min-h-0 flex-1 overflow-auto p-5">
+              {/* SQL Output */}
+
+              <div
+                className="
+                  min-h-0
+                  flex-1
+                  overflow-auto
+                  bg-input
+                  p-5
+                "
+              >
 
                 {sqlQuery ? (
-                  <pre className="whitespace-pre-wrap font-mono text-sm leading-6 text-slate-300">
+                  <pre
+                    className="
+                      whitespace-pre-wrap
+                      font-mono
+                      text-sm
+                      leading-6
+                      text-primary
+                    "
+                  >
                     {sqlQuery}
                   </pre>
                 ) : (
-                  <div className="flex h-full min-h-[280px] items-center justify-center">
+                  <div
+                    className="
+                      flex h-full
+                      min-h-[280px]
+                      items-center
+                      justify-center
+                    "
+                  >
 
                     <div className="text-center">
 
                       <Database
                         size={42}
-                        className="mx-auto mb-4 text-slate-700"
+                        strokeWidth={1.5}
+                        className="
+                          mx-auto mb-4
+                          text-muted
+                        "
                       />
 
-                      <p className="text-sm text-slate-500">
+                      <p className="text-sm text-muted">
                         Generated SQL will appear here.
                       </p>
 
@@ -317,52 +553,110 @@ export default function SQLGenerator() {
 
             </div>
 
-            {/* Query Type */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+            {/* ==========================================
+                QUERY TYPE
+            ========================================== */}
 
-              <h2 className="mb-3 font-semibold text-white">
+            <div
+              className="
+                rounded-2xl
+                border border-theme
+                bg-secondary
+                p-5
+              "
+            >
+              <h2
+                className="
+                  mb-3 font-semibold
+                  text-primary
+                "
+              >
                 Query Type
               </h2>
 
-              <p className="font-mono text-sm text-blue-400">
+              <p
+                className="
+                  font-mono
+                  text-sm
+                  text-[#d4a72c]
+                "
+              >
                 {queryType || "Query type will appear here."}
               </p>
-
             </div>
 
-            {/* Explanation */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+            {/* ==========================================
+                EXPLANATION
+            ========================================== */}
 
-              <h2 className="mb-3 font-semibold text-white">
+            <div
+              className="
+                rounded-2xl
+                border border-theme
+                bg-secondary
+                p-5
+              "
+            >
+              <h2
+                className="
+                  mb-3 font-semibold
+                  text-primary
+                "
+              >
                 Explanation
               </h2>
 
-              <p className="whitespace-pre-wrap text-sm leading-6 text-slate-400">
-                {explanation || "SQL query explanation will appear here."}
+              <p
+                className="
+                  whitespace-pre-wrap
+                  text-sm
+                  leading-6
+                  text-secondary
+                "
+              >
+                {explanation ||
+                  "SQL query explanation will appear here."}
               </p>
-
             </div>
 
-            {/* Optimization Tips */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+            {/* ==========================================
+                OPTIMIZATION TIPS
+            ========================================== */}
 
-              <h2 className="mb-3 font-semibold text-white">
+            <div
+              className="
+                rounded-2xl
+                border border-theme
+                bg-secondary
+                p-5
+              "
+            >
+              <h2
+                className="
+                  mb-3 font-semibold
+                  text-primary
+                "
+              >
                 Optimization Tips
               </h2>
 
-              <p className="whitespace-pre-wrap text-sm leading-6 text-slate-400">
+              <p
+                className="
+                  whitespace-pre-wrap
+                  text-sm
+                  leading-6
+                  text-secondary
+                "
+              >
                 {optimizationTips ||
                   "SQL optimization recommendations will appear here."}
               </p>
-
             </div>
 
           </div>
 
         </div>
-
       </div>
-
     </div>
   );
 }

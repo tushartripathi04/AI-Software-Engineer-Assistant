@@ -11,21 +11,24 @@ export default function DashboardLayout({
   children,
 }: Props) {
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-slate-950">
-      {/* Main Dashboard Sidebar */}
+    <div className="flex h-screen w-full overflow-hidden bg-primary">
+      
+      {/* Sidebar */}
       <Sidebar />
 
-      {/* Main Application Area */}
+      {/* Main Application */}
       <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
-        {/* Top Navbar */}
+        
+        {/* Navbar */}
         <div className="shrink-0">
           <Navbar />
         </div>
 
         {/* Page Content */}
-        <main className="min-h-0 min-w-0 flex-1 overflow-hidden bg-slate-950">
+        <main className="min-h-0 min-w-0 flex-1 overflow-hidden bg-primary">
           {children}
         </main>
+
       </div>
     </div>
   );

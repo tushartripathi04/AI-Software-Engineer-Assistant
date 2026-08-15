@@ -7,7 +7,9 @@ import {
   Sparkles,
   Upload,
 } from "lucide-react";
+
 import api from "../../lib/axios";
+
 interface ProjectAnalysisResponse {
   project_name: string;
   language: string;
@@ -26,13 +28,20 @@ export default function ProjectAnalyzer() {
   const [language, setLanguage] = useState("");
   const [framework, setFramework] = useState("");
   const [architecture, setArchitecture] = useState("");
+
   const [totalFiles, setTotalFiles] = useState<number | null>(null);
   const [totalLines, setTotalLines] = useState<number | null>(null);
+
   const [technologies, setTechnologies] = useState<string[]>([]);
   const [recommendations, setRecommendations] = useState<string[]>([]);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // ==========================================
+  // FILE SELECTION
+  // ==========================================
+
   const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -47,7 +56,12 @@ export default function ProjectAnalyzer() {
     }
 
     setFile(selectedFile);
+    setError("");
   };
+
+  // ==========================================
+  // RESET
+  // ==========================================
 
   const handleReset = () => {
     setFile(null);
@@ -61,121 +75,224 @@ export default function ProjectAnalyzer() {
     setRecommendations([]);
     setError("");
   };
-const handleAnalyze = async () => {
-  if (!file) return;
 
-  setLoading(true);
-  setError("");
+  // ==========================================
+  // ANALYZE PROJECT
+  // ==========================================
 
-  try {
-    const formData = new FormData();
+  const handleAnalyze = async () => {
+    if (!file) return;
 
-    formData.append("file", file);
+    setLoading(true);
+    setError("");
 
-    const response = await api.post<ProjectAnalysisResponse>(
-  "/project/analyze",
-  formData,
-  {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  }
-);
+    try {
+      const formData = new FormData();
 
-    const data = response.data;
+      formData.append("file", file);
 
-    setProjectName(data.project_name);
-    setLanguage(data.language);
-    setFramework(data.framework);
-    setArchitecture(data.architecture);
-    setTotalFiles(data.total_files);
-    setTotalLines(data.total_lines);
-    setTechnologies(data.technologies);
-    setRecommendations(data.recommendations);
-  } catch (error: any) {
-    console.error("Project analysis failed:", error);
+      const response = await api.post<ProjectAnalysisResponse>(
+        "/project/analyze",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
-    setError(
-      error?.response?.data?.detail ||
-        "Failed to analyze project. Please try again."
-    );
-  } finally {
-    setLoading(false);
-  }
-};
+      const data = response.data;
+
+      setProjectName(data.project_name);
+      setLanguage(data.language);
+      setFramework(data.framework);
+      setArchitecture(data.architecture);
+      setTotalFiles(data.total_files);
+      setTotalLines(data.total_lines);
+      setTechnologies(data.technologies);
+      setRecommendations(data.recommendations);
+    } catch (error: any) {
+      console.error("Project analysis failed:", error);
+
+      setError(
+        error?.response?.data?.detail ||
+          "Failed to analyze project. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="flex h-full min-h-0 flex-col bg-slate-950">
+    <div
+      className="
+        flex h-full min-h-0 flex-col
+        bg-primary
+        text-primary
+      "
+    >
+      {/* ==========================================
+          HEADER
+      ========================================== */}
 
-      {/* Header */}
-      <div className="shrink-0 border-b border-slate-800 px-8 py-6">
-
+      <div
+        className="
+          shrink-0
+          border-b border-theme
+          bg-primary
+          px-8 py-6
+        "
+      >
         <div className="flex items-center gap-4">
 
-          <div className="rounded-xl bg-gradient-to-r from-blue-500 to-violet-600 p-3">
-            <FolderSearch size={24} className="text-white" />
+          {/* Icon */}
+
+          <div
+            className="
+              flex h-12 w-12 shrink-0
+              items-center justify-center
+              rounded-xl
+              border border-[#d4a72c]/20
+              bg-[#1b1810]
+            "
+          >
+            <FolderSearch
+              size={24}
+              strokeWidth={1.8}
+              className="text-[#d4a72c]"
+            />
           </div>
 
+          {/* Title */}
+
           <div>
-            <h1 className="text-2xl font-bold text-white">
+            <h1
+              className="
+                text-2xl font-bold
+                tracking-tight
+                text-primary
+              "
+            >
               Project Analyzer
             </h1>
 
-            <p className="mt-1 text-sm text-slate-400">
+            <p
+              className="
+                mt-1 text-sm
+                text-secondary
+              "
+            >
               Upload your project ZIP and let AI analyze its architecture,
               technologies, and structure.
             </p>
           </div>
 
         </div>
-
       </div>
 
-      {/* Main Content */}
-      <div className="min-h-0 flex-1 overflow-y-auto p-6 lg:p-8">
+      {/* ==========================================
+          MAIN CONTENT
+      ========================================== */}
 
-        <div className="mx-auto max-w-7xl space-y-6">
+      <div
+        className="
+          min-h-0 flex-1
+          overflow-y-auto
+          bg-primary
+          p-6
+          lg:p-8
+        "
+      >
+        <div
+          className="
+            mx-auto
+            max-w-7xl
+            space-y-6
+          "
+        >
 
-          {/* Upload Section */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+          {/* ==========================================
+              UPLOAD SECTION
+          ========================================== */}
+
+          <div
+            className="
+              rounded-2xl
+              border border-theme
+              bg-secondary
+              p-6
+            "
+          >
 
             <div className="mb-5 flex items-center gap-3">
 
               <Sparkles
                 size={20}
-                className="text-blue-400"
+                strokeWidth={1.8}
+                className="text-[#d4a72c]"
               />
 
-              <h2 className="text-lg font-semibold text-white">
+              <h2
+                className="
+                  text-lg font-semibold
+                  text-primary
+                "
+              >
                 Upload Project
               </h2>
 
             </div>
 
+            {/* Upload Area */}
+
             <label
               htmlFor="project-upload"
               className="
-                flex cursor-pointer flex-col items-center
-                justify-center rounded-2xl border-2
-                border-dashed border-slate-700
-                bg-slate-950/60 px-6 py-12
-                transition
-                hover:border-blue-500
-                hover:bg-slate-950
+                flex cursor-pointer
+                flex-col items-center
+                justify-center
+                rounded-2xl
+                border-2 border-dashed
+                border-theme
+                bg-input
+                px-6 py-12
+                transition-all
+                hover:border-[#d4a72c]/60
+                hover:bg-tertiary
               "
             >
 
-              <div className="mb-4 rounded-full bg-blue-500/10 p-4">
+              <div
+                className="
+                  mb-4
+                  rounded-full
+                  border border-[#d4a72c]/20
+                  bg-[#1b1810]
+                  p-4
+                "
+              >
                 <Upload
                   size={30}
-                  className="text-blue-400"
+                  strokeWidth={1.8}
+                  className="text-[#d4a72c]"
                 />
               </div>
 
-              <p className="text-sm font-medium text-white">
+              <p
+                className="
+                  text-sm font-medium
+                  text-primary
+                "
+              >
                 Click to upload your project
               </p>
 
-              <p className="mt-2 text-xs text-slate-500">
+              <p
+                className="
+                  mt-2 text-xs
+                  text-muted
+                "
+              >
                 ZIP files only
               </p>
 
@@ -189,26 +306,57 @@ const handleAnalyze = async () => {
 
             </label>
 
-            {/* Selected File */}
+            {/* ==========================================
+                SELECTED FILE
+            ========================================== */}
+
             {file && (
-              <div className="mt-5 flex items-center justify-between rounded-xl border border-slate-700 bg-slate-950 px-4 py-4">
+              <div
+                className="
+                  mt-5
+                  flex items-center
+                  justify-between
+                  rounded-xl
+                  border border-theme
+                  bg-input
+                  px-4 py-4
+                "
+              >
 
                 <div className="flex items-center gap-3">
 
-                  <div className="rounded-lg bg-violet-500/10 p-2">
+                  <div
+                    className="
+                      rounded-lg
+                      border border-[#d4a72c]/20
+                      bg-[#1b1810]
+                      p-2
+                    "
+                  >
                     <FileArchive
                       size={20}
-                      className="text-violet-400"
+                      strokeWidth={1.8}
+                      className="text-[#d4a72c]"
                     />
                   </div>
 
                   <div>
 
-                    <p className="text-sm font-medium text-white">
+                    <p
+                      className="
+                        text-sm font-medium
+                        text-primary
+                      "
+                    >
                       {file.name}
                     </p>
 
-                    <p className="mt-1 text-xs text-slate-500">
+                    <p
+                      className="
+                        mt-1 text-xs
+                        text-muted
+                      "
+                    >
                       {(file.size / 1024 / 1024).toFixed(2)} MB
                     </p>
 
@@ -218,60 +366,103 @@ const handleAnalyze = async () => {
 
                 <CheckCircle2
                   size={20}
-                  className="text-emerald-400"
+                  strokeWidth={1.8}
+                  className="text-emerald-500"
                 />
 
               </div>
             )}
 
-            {/* Buttons */}
+            {/* ==========================================
+                ERROR
+            ========================================== */}
+
+            {error && (
+              <div
+                className="
+                  mt-4
+                  rounded-xl
+                  border border-red-500/20
+                  bg-red-500/10
+                  px-4 py-3
+                  text-sm
+                  text-red-500
+                "
+              >
+                {error}
+              </div>
+            )}
+
+            {/* ==========================================
+                BUTTONS
+            ========================================== */}
+
             <div className="mt-6 flex gap-3">
 
+              {/* Analyze */}
+
               <button
-  type="button"
-  onClick={handleAnalyze}
-  disabled={!file || loading}
-  className="
-    flex flex-1 items-center justify-center gap-2
-    rounded-xl px-5 py-3
-    text-sm font-semibold text-white
-    transition
-    disabled:cursor-not-allowed
-    disabled:opacity-40
-    bg-gradient-to-r from-blue-600 to-indigo-600
-    hover:from-blue-500
-    hover:to-indigo-500
-  "
->
-  {loading ? (
-    <>
-      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-      Analyzing...
-    </>
-  ) : (
-    <>
-      <FolderSearch size={18} />
-      Analyze Project
-    </>
-  )}
-</button>
-{error && (
-  <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
-    {error}
-  </div>
-)}
+                type="button"
+                onClick={handleAnalyze}
+                disabled={!file || loading}
+                className="
+                  flex flex-1
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-xl
+                  bg-[#d4a72c]
+                  px-5 py-3
+                  text-sm font-semibold
+                  text-[#17130a]
+                  transition-all
+                  hover:bg-[#e8b83a]
+                  disabled:cursor-not-allowed
+                  disabled:opacity-40
+                "
+              >
+                {loading ? (
+                  <>
+                    <span
+                      className="
+                        h-4 w-4
+                        animate-spin
+                        rounded-full
+                        border-2
+                        border-[#17130a]
+                        border-t-transparent
+                      "
+                    />
+
+                    Analyzing...
+                  </>
+                ) : (
+                  <>
+                    <FolderSearch size={18} />
+                    Analyze Project
+                  </>
+                )}
+              </button>
+
+              {/* Reset */}
 
               <button
                 type="button"
                 onClick={handleReset}
                 className="
-                  flex items-center justify-center gap-2
-                  rounded-xl border border-slate-700
-                  bg-slate-900 px-5 py-3
-                  text-sm font-medium text-slate-300
-                  transition
-                  hover:bg-slate-800
-                  hover:text-white
+                  flex items-center
+                  justify-center
+                  gap-2
+                  rounded-xl
+                  border border-theme
+                  bg-tertiary
+                  px-5 py-3
+                  text-sm font-medium
+                  text-secondary
+                  transition-all
+                  hover:border-[#d4a72c]/40
+                  hover:bg-secondary
+                  hover:text-primary
                 "
               >
                 <RotateCcw size={17} />
@@ -282,20 +473,39 @@ const handleAnalyze = async () => {
 
           </div>
 
-          {/* Analysis Results */}
+          {/* ==========================================
+              ANALYSIS RESULTS
+          ========================================== */}
+
           <div className="grid gap-6 lg:grid-cols-2">
 
-            {/* Project Overview */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+            {/* ==========================================
+                PROJECT OVERVIEW
+            ========================================== */}
+
+            <div
+              className="
+                rounded-2xl
+                border border-theme
+                bg-secondary
+                p-6
+              "
+            >
 
               <div className="mb-5 flex items-center gap-3">
 
                 <FolderSearch
                   size={20}
-                  className="text-blue-400"
+                  strokeWidth={1.8}
+                  className="text-[#d4a72c]"
                 />
 
-                <h2 className="text-lg font-semibold text-white">
+                <h2
+                  className="
+                    text-lg font-semibold
+                    text-primary
+                  "
+                >
                   Project Overview
                 </h2>
 
@@ -303,42 +513,122 @@ const handleAnalyze = async () => {
 
               <div className="grid gap-4 sm:grid-cols-2">
 
-                <div className="rounded-xl bg-slate-950 p-4">
-                  <p className="text-xs text-slate-500">
+                {/* Project Name */}
+
+                <div
+                  className="
+                    rounded-xl
+                    border border-theme
+                    bg-input
+                    p-4
+                  "
+                >
+                  <p
+                    className="
+                      text-xs
+                      text-muted
+                    "
+                  >
                     Project Name
                   </p>
 
-                  <p className="mt-2 text-sm font-medium text-white">
+                  <p
+                    className="
+                      mt-2 text-sm
+                      font-medium
+                      text-primary
+                    "
+                  >
                     {projectName || "Not analyzed yet"}
                   </p>
                 </div>
 
-                <div className="rounded-xl bg-slate-950 p-4">
-                  <p className="text-xs text-slate-500">
+                {/* Language */}
+
+                <div
+                  className="
+                    rounded-xl
+                    border border-theme
+                    bg-input
+                    p-4
+                  "
+                >
+                  <p
+                    className="
+                      text-xs
+                      text-muted
+                    "
+                  >
                     Language
                   </p>
 
-                  <p className="mt-2 text-sm font-medium text-white">
+                  <p
+                    className="
+                      mt-2 text-sm
+                      font-medium
+                      text-primary
+                    "
+                  >
                     {language || "Not analyzed yet"}
                   </p>
                 </div>
 
-                <div className="rounded-xl bg-slate-950 p-4">
-                  <p className="text-xs text-slate-500">
+                {/* Framework */}
+
+                <div
+                  className="
+                    rounded-xl
+                    border border-theme
+                    bg-input
+                    p-4
+                  "
+                >
+                  <p
+                    className="
+                      text-xs
+                      text-muted
+                    "
+                  >
                     Framework
                   </p>
 
-                  <p className="mt-2 text-sm font-medium text-white">
+                  <p
+                    className="
+                      mt-2 text-sm
+                      font-medium
+                      text-primary
+                    "
+                  >
                     {framework || "Not analyzed yet"}
                   </p>
                 </div>
 
-                <div className="rounded-xl bg-slate-950 p-4">
-                  <p className="text-xs text-slate-500">
+                {/* Architecture */}
+
+                <div
+                  className="
+                    rounded-xl
+                    border border-theme
+                    bg-input
+                    p-4
+                  "
+                >
+                  <p
+                    className="
+                      text-xs
+                      text-muted
+                    "
+                  >
                     Architecture
                   </p>
 
-                  <p className="mt-2 text-sm font-medium text-white">
+                  <p
+                    className="
+                      mt-2 text-sm
+                      font-medium
+                      text-primary
+                    "
+                  >
                     {architecture || "Not analyzed yet"}
                   </p>
                 </div>
@@ -347,17 +637,33 @@ const handleAnalyze = async () => {
 
             </div>
 
-            {/* Project Statistics */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+            {/* ==========================================
+                PROJECT STATISTICS
+            ========================================== */}
+
+            <div
+              className="
+                rounded-2xl
+                border border-theme
+                bg-secondary
+                p-6
+              "
+            >
 
               <div className="mb-5 flex items-center gap-3">
 
                 <Sparkles
                   size={20}
-                  className="text-violet-400"
+                  strokeWidth={1.8}
+                  className="text-[#d4a72c]"
                 />
 
-                <h2 className="text-lg font-semibold text-white">
+                <h2
+                  className="
+                    text-lg font-semibold
+                    text-primary
+                  "
+                >
                   Project Statistics
                 </h2>
 
@@ -365,38 +671,90 @@ const handleAnalyze = async () => {
 
               <div className="grid grid-cols-2 gap-4">
 
-                <div className="rounded-xl bg-slate-950 p-5">
+                {/* Total Files */}
 
-                  <p className="text-xs text-slate-500">
+                <div
+                  className="
+                    rounded-xl
+                    border border-theme
+                    bg-input
+                    p-5
+                  "
+                >
+                  <p
+                    className="
+                      text-xs
+                      text-muted
+                    "
+                  >
                     Total Files
                   </p>
 
-                  <p className="mt-2 text-2xl font-bold text-white">
+                  <p
+                    className="
+                      mt-2 text-2xl
+                      font-bold
+                      text-primary
+                    "
+                  >
                     {totalFiles ?? "--"}
                   </p>
-
                 </div>
 
-                <div className="rounded-xl bg-slate-950 p-5">
+                {/* Total Lines */}
 
-                  <p className="text-xs text-slate-500">
+                <div
+                  className="
+                    rounded-xl
+                    border border-theme
+                    bg-input
+                    p-5
+                  "
+                >
+                  <p
+                    className="
+                      text-xs
+                      text-muted
+                    "
+                  >
                     Total Lines
                   </p>
 
-                  <p className="mt-2 text-2xl font-bold text-white">
+                  <p
+                    className="
+                      mt-2 text-2xl
+                      font-bold
+                      text-primary
+                    "
+                  >
                     {totalLines ?? "--"}
                   </p>
-
                 </div>
 
               </div>
 
             </div>
 
-            {/* Technologies */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+            {/* ==========================================
+                TECHNOLOGIES
+            ========================================== */}
 
-              <h2 className="mb-4 text-lg font-semibold text-white">
+            <div
+              className="
+                rounded-2xl
+                border border-theme
+                bg-secondary
+                p-6
+              "
+            >
+
+              <h2
+                className="
+                  mb-4
+                  text-lg font-semibold
+                  text-primary
+                "
+              >
                 Technologies
               </h2>
 
@@ -407,9 +765,13 @@ const handleAnalyze = async () => {
                     <span
                       key={technology}
                       className="
-                        rounded-full border border-blue-500/20
-                        bg-blue-500/10 px-3 py-2
-                        text-xs font-medium text-blue-300
+                        rounded-full
+                        border border-[#d4a72c]/25
+                        bg-[#d4a72c]/10
+                        px-3 py-2
+                        text-xs font-medium
+                        text-[#b88d1f]
+                        dark:text-[#e8b83a]
                       "
                     >
                       {technology}
@@ -418,17 +780,38 @@ const handleAnalyze = async () => {
 
                 </div>
               ) : (
-                <p className="text-sm text-slate-500">
+                <p
+                  className="
+                    text-sm
+                    text-muted
+                  "
+                >
                   Technologies will appear after analysis.
                 </p>
               )}
 
             </div>
 
-            {/* Recommendations */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+            {/* ==========================================
+                RECOMMENDATIONS
+            ========================================== */}
 
-              <h2 className="mb-4 text-lg font-semibold text-white">
+            <div
+              className="
+                rounded-2xl
+                border border-theme
+                bg-secondary
+                p-6
+              "
+            >
+
+              <h2
+                className="
+                  mb-4
+                  text-lg font-semibold
+                  text-primary
+                "
+              >
                 Recommendations
               </h2>
 
@@ -440,9 +823,13 @@ const handleAnalyze = async () => {
                       <li
                         key={index}
                         className="
-                          rounded-xl bg-slate-950
-                          px-4 py-3 text-sm
-                          leading-6 text-slate-400
+                          rounded-xl
+                          border border-theme
+                          bg-input
+                          px-4 py-3
+                          text-sm
+                          leading-6
+                          text-secondary
                         "
                       >
                         {recommendation}
@@ -452,7 +839,12 @@ const handleAnalyze = async () => {
 
                 </ul>
               ) : (
-                <p className="text-sm text-slate-500">
+                <p
+                  className="
+                    text-sm
+                    text-muted
+                  "
+                >
                   Recommendations will appear after analysis.
                 </p>
               )}
@@ -462,9 +854,7 @@ const handleAnalyze = async () => {
           </div>
 
         </div>
-
       </div>
-
     </div>
   );
 }

@@ -1,30 +1,50 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+
 import CodeBlock from "./CodeBlock";
 
 interface Props {
   content: string;
 }
 
-export default function MarkdownRenderer({ content }: Props) {
+export default function MarkdownRenderer({
+  content,
+}: Props) {
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
       components={{
+
         code({ className, children }) {
-          const match = /language-(\w+)/.exec(className || "");
+          const match =
+            /language-(\w+)/.exec(
+              className || ""
+            );
 
           if (match) {
             return (
               <CodeBlock
                 language={match[1]}
-                value={String(children).replace(/\n$/, "")}
+                value={String(children).replace(
+                  /\n$/,
+                  ""
+                )}
               />
             );
           }
 
           return (
-            <code className="rounded-md bg-slate-800 px-1.5 py-0.5 font-mono text-sm text-slate-200">
+            <code
+              className="
+                rounded-md
+                border border-theme
+                bg-tertiary
+                px-1.5 py-0.5
+                font-mono
+                text-sm
+                text-primary
+              "
+            >
               {children}
             </code>
           );
@@ -36,7 +56,14 @@ export default function MarkdownRenderer({ content }: Props) {
 
         h1({ children }) {
           return (
-            <h1 className="mb-4 mt-6 text-3xl font-bold text-white">
+            <h1
+              className="
+                mb-4 mt-6
+                text-3xl
+                font-bold
+                text-primary
+              "
+            >
               {children}
             </h1>
           );
@@ -44,7 +71,14 @@ export default function MarkdownRenderer({ content }: Props) {
 
         h2({ children }) {
           return (
-            <h2 className="mb-3 mt-5 text-2xl font-semibold text-white">
+            <h2
+              className="
+                mb-3 mt-5
+                text-2xl
+                font-semibold
+                text-primary
+              "
+            >
               {children}
             </h2>
           );
@@ -52,7 +86,14 @@ export default function MarkdownRenderer({ content }: Props) {
 
         h3({ children }) {
           return (
-            <h3 className="mb-2 mt-4 text-xl font-semibold text-white">
+            <h3
+              className="
+                mb-2 mt-4
+                text-xl
+                font-semibold
+                text-primary
+              "
+            >
               {children}
             </h3>
           );
@@ -60,7 +101,13 @@ export default function MarkdownRenderer({ content }: Props) {
 
         p({ children }) {
           return (
-            <p className="mb-4 leading-7 text-slate-300">
+            <p
+              className="
+                mb-4
+                leading-7
+                text-secondary
+              "
+            >
               {children}
             </p>
           );
@@ -68,7 +115,15 @@ export default function MarkdownRenderer({ content }: Props) {
 
         ul({ children }) {
           return (
-            <ul className="mb-4 list-disc space-y-2 pl-6 text-slate-300">
+            <ul
+              className="
+                mb-4
+                list-disc
+                space-y-2
+                pl-6
+                text-secondary
+              "
+            >
               {children}
             </ul>
           );
@@ -76,7 +131,15 @@ export default function MarkdownRenderer({ content }: Props) {
 
         ol({ children }) {
           return (
-            <ol className="mb-4 list-decimal space-y-2 pl-6 text-slate-300">
+            <ol
+              className="
+                mb-4
+                list-decimal
+                space-y-2
+                pl-6
+                text-secondary
+              "
+            >
               {children}
             </ol>
           );
@@ -88,7 +151,17 @@ export default function MarkdownRenderer({ content }: Props) {
 
         blockquote({ children }) {
           return (
-            <blockquote className="my-4 border-l-4 border-violet-500 bg-slate-900 px-4 py-2 italic text-slate-300">
+            <blockquote
+              className="
+                my-4
+                border-l-4
+                border-violet-500
+                bg-tertiary
+                px-4 py-2
+                italic
+                text-secondary
+              "
+            >
               {children}
             </blockquote>
           );
@@ -97,7 +170,14 @@ export default function MarkdownRenderer({ content }: Props) {
         table({ children }) {
           return (
             <div className="my-4 overflow-x-auto">
-              <table className="w-full border-collapse border border-slate-700">
+              <table
+                className="
+                  w-full
+                  border-collapse
+                  border
+                  border-theme
+                "
+              >
                 {children}
               </table>
             </div>
@@ -106,7 +186,7 @@ export default function MarkdownRenderer({ content }: Props) {
 
         thead({ children }) {
           return (
-            <thead className="bg-slate-800">
+            <thead className="bg-tertiary">
               {children}
             </thead>
           );
@@ -114,7 +194,7 @@ export default function MarkdownRenderer({ content }: Props) {
 
         tbody({ children }) {
           return (
-            <tbody className="bg-slate-900">
+            <tbody className="bg-secondary">
               {children}
             </tbody>
           );
@@ -122,7 +202,7 @@ export default function MarkdownRenderer({ content }: Props) {
 
         tr({ children }) {
           return (
-            <tr className="border-b border-slate-700">
+            <tr className="border-b border-theme">
               {children}
             </tr>
           );
@@ -130,7 +210,15 @@ export default function MarkdownRenderer({ content }: Props) {
 
         th({ children }) {
           return (
-            <th className="border border-slate-700 px-4 py-2 text-left font-semibold text-white">
+            <th
+              className="
+                border border-theme
+                px-4 py-2
+                text-left
+                font-semibold
+                text-primary
+              "
+            >
               {children}
             </th>
           );
@@ -138,7 +226,13 @@ export default function MarkdownRenderer({ content }: Props) {
 
         td({ children }) {
           return (
-            <td className="border border-slate-700 px-4 py-2 text-slate-300">
+            <td
+              className="
+                border border-theme
+                px-4 py-2
+                text-secondary
+              "
+            >
               {children}
             </td>
           );
@@ -150,7 +244,11 @@ export default function MarkdownRenderer({ content }: Props) {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-400 underline hover:text-blue-300"
+              className="
+                text-blue-500
+                underline
+                hover:text-blue-600
+              "
             >
               {children}
             </a>
@@ -159,9 +257,10 @@ export default function MarkdownRenderer({ content }: Props) {
 
         hr() {
           return (
-            <hr className="my-6 border-slate-700" />
+            <hr className="my-6 border-theme" />
           );
         },
+
       }}
     >
       {content}

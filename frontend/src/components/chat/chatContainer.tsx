@@ -10,21 +10,38 @@ export default function ChatContainer() {
   } = useChat();
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-      {/* Scrollable messages */}
+    <div
+      className="
+        flex min-h-0 flex-1
+        flex-col
+        overflow-hidden
+        bg-primary
+        transition-colors duration-300
+      "
+    >
+
+      {/* Messages */}
       <ChatMessages messages={messages} />
 
-      {/* AI loading state */}
+      {/* Loading */}
       {loading && (
-        <div className="shrink-0 px-8 pb-3 text-sm text-slate-400">
+        <div
+          className="
+            shrink-0
+            px-8 pb-3
+            text-sm
+            text-secondary
+          "
+        >
           AI is thinking...
         </div>
       )}
 
-      {/* Fixed input */}
+      {/* Input */}
       <div className="shrink-0">
         <ChatInput onSend={send} />
       </div>
+
     </div>
   );
 }
