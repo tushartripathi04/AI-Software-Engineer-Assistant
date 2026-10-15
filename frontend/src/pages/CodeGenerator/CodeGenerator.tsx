@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   Code2,
   Copy,
@@ -6,6 +6,7 @@ import {
   Sparkles,
   RotateCcw,
 } from "lucide-react";
+import { getErrorMessage } from "../../utils/errorMessage";
 
 import api from "../../lib/axios";
 
@@ -63,16 +64,20 @@ export default function CodeGenerator() {
       setGeneratedCode(response.data.generated_code);
       setExplanation(response.data.explanation);
       setComplexity(response.data.complexity);
-    } catch (error: any) {
+    }
+     catch (error: unknown) {
       console.error("Code generation failed:", error);
 
       setError(
-        error?.response?.data?.detail ||
+        getErrorMessage(
+          error,
           "Failed to generate code. Please try again."
+        )
       );
     } finally {
       setLoading(false);
     }
+
   };
 
   // ==========================================
@@ -328,12 +333,12 @@ export default function CodeGenerator() {
                   justify-center
                   gap-2
                   rounded-xl
-            
+
                   text-sm
                   font-semibold
                   text-white
 
-                 
+
                   transition-colors
                   disabled:cursor-not-allowed
                   disabled:opacity-40
@@ -625,7 +630,7 @@ export default function CodeGenerator() {
                   text-blue-500
                 "
               >
-                {complexity || "—"}
+                {complexity || "â€”"}
               </p>
 
             </div>

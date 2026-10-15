@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+﻿import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate, Link } from "react-router-dom";
@@ -6,7 +6,7 @@ import { toast } from "sonner";
 
 import AuthLayout from "../../layouts/AuthLayout";
 import AuthService from "../../services/auth.service";
-
+import { getErrorMessage } from "../../utils/errorMessage";
 import {
   registerSchema,
   type RegisterFormData,
@@ -23,9 +23,14 @@ export default function Register() {
     resolver: zodResolver(registerSchema),
   });
 
+
   const registerMutation = useMutation({
     mutationFn: (data: RegisterFormData) => {
-      const { confirmPassword, ...payload } = data;
+      const payload = {
+        full_name: data.full_name,
+        email: data.email,
+        password: data.password,
+      };
 
       return AuthService.register(payload);
     },
@@ -35,13 +40,11 @@ export default function Register() {
       navigate("/login");
     },
 
-    onError: (error: any) => {
-      toast.error(
-        error?.response?.data?.detail ??
-          "Registration failed"
-      );
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Registration failed"));
     },
   });
+
 
   const onSubmit = (data: RegisterFormData) => {
     registerMutation.mutate(data);

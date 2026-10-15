@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   Check,
   Copy,
@@ -6,6 +6,7 @@ import {
   RotateCcw,
   Sparkles,
 } from "lucide-react";
+import { getErrorMessage } from "../../utils/errorMessage";
 
 import api from "../../lib/axios";
 
@@ -129,19 +130,23 @@ ${alternativeApproach}
       setBottlenecks(data.bottlenecks);
       setOptimizations(data.optimizations);
       setAlternativeApproach(data.alternative_approach);
-    } catch (error: any) {
+
+    } catch (error: unknown) {
       console.error(
         "Complexity analysis failed:",
         error
       );
 
       setError(
-        error?.response?.data?.detail ||
+        getErrorMessage(
+          error,
           "Failed to analyze complexity. Please try again."
+        )
       );
     } finally {
       setLoading(false);
     }
+
   };
 
   return (
@@ -239,7 +244,7 @@ ${alternativeApproach}
         >
 
           {/* ==========================================
-              LEFT — CODE INPUT
+              LEFT â€” CODE INPUT
           ========================================== */}
 
           <div
@@ -465,7 +470,7 @@ ${alternativeApproach}
           </div>
 
           {/* ==========================================
-              RIGHT — RESULTS
+              RIGHT â€” RESULTS
           ========================================== */}
 
           <div className="flex flex-col gap-5">
@@ -584,7 +589,7 @@ ${alternativeApproach}
                     text-[#d4a72c]
                   "
                 >
-                  {timeComplexity || "—"}
+                  {timeComplexity || "â€”"}
                 </p>
 
               </div>
@@ -617,7 +622,7 @@ ${alternativeApproach}
                     text-[#b894e8]
                   "
                 >
-                  {spaceComplexity || "—"}
+                  {spaceComplexity || "â€”"}
                 </p>
 
               </div>

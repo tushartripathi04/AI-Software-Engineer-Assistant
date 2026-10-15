@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   Check,
   Copy,
@@ -6,7 +6,7 @@ import {
   RotateCcw,
   Sparkles,
 } from "lucide-react";
-
+import { getErrorMessage } from "../../utils/errorMessage";
 import api from "../../lib/axios";
 
 interface DiagramGenerationResponse {
@@ -88,16 +88,20 @@ export default function DiagramGenerator() {
       setMermaidCode(response.data.mermaid_code);
       setExplanation(response.data.explanation);
       setDesignNotes(response.data.design_notes);
-    } catch (error: any) {
+
+    } catch (error: unknown) {
       console.error("Diagram generation failed:", error);
 
       setError(
-        error?.response?.data?.detail ||
+        getErrorMessage(
+          error,
           "Failed to generate diagram. Please try again."
+        )
       );
     } finally {
       setLoading(false);
     }
+
   };
 
   return (

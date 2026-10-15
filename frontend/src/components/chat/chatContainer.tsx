@@ -1,14 +1,21 @@
+﻿
 import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
-import { useChat } from "@/hooks/useChat";
+import type { ChatMessage } from "@/types/chat";
 
-export default function ChatContainer() {
-  const {
-    messages,
-    loading,
-    send,
-  } = useChat();
+interface ChatContainerProps {
+  messages: ChatMessage[];
+  loading: boolean;
+  error: string | null;
+  onSend: (message: string) => void;
+}
 
+export default function ChatContainer({
+  messages,
+  loading,
+  error,
+  onSend,
+}: ChatContainerProps) {
   return (
     <div
       className="
@@ -19,29 +26,26 @@ export default function ChatContainer() {
         transition-colors duration-300
       "
     >
-
-      {/* Messages */}
       <ChatMessages messages={messages} />
 
-      {/* Loading */}
-      {loading && (
+      {error && (
         <div
-          className="
-            shrink-0
-            px-8 pb-3
-            text-sm
-            text-secondary
-          "
+          role="alert"
+          className="shrink-0 px-8 pb-3 text-sm text-red-500"
         >
+          {error}
+        </div>
+      )}
+
+      {loading && (
+        <div className="shrink-0 px-8 pb-3 text-sm text-secondary">
           AI is thinking...
         </div>
       )}
 
-      {/* Input */}
       <div className="shrink-0">
-        <ChatInput onSend={send} />
+        <ChatInput onSend={onSend} />
       </div>
-
     </div>
   );
 }

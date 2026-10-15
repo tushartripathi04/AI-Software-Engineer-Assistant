@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   Check,
   Code2,
@@ -6,6 +6,7 @@ import {
   RotateCcw,
   Sparkles,
 } from "lucide-react";
+import { getErrorMessage } from "../../utils/errorMessage";
 
 import api from "../../lib/axios";
 
@@ -133,16 +134,20 @@ ${improvements}
       setSpaceComplexity(data.space_complexity);
       setRealWorldUse(data.real_world_use);
       setImprovements(data.improvements);
-    } catch (error: any) {
+
+    } catch (error: unknown) {
       console.error("Code explanation failed:", error);
 
       setError(
-        error?.response?.data?.detail ||
+        getErrorMessage(
+          error,
           "Failed to explain the code. Please try again."
+        )
       );
     } finally {
       setLoading(false);
     }
+
   };
 
   return (
@@ -697,7 +702,7 @@ ${improvements}
                     text-[var(--accent)]
                   "
                 >
-                  {timeComplexity || "—"}
+                  {timeComplexity || "â€”"}
                 </p>
 
               </div>
@@ -727,7 +732,7 @@ ${improvements}
                     text-[var(--accent)]
                   "
                 >
-                  {spaceComplexity || "—"}
+                  {spaceComplexity || "â€”"}
                 </p>
 
               </div>

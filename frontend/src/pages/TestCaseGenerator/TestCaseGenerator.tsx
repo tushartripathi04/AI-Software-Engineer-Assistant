@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   Check,
   Code2,
@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 import api from "../../lib/axios";
-
+import { getErrorMessage } from "../../utils/errorMessage";
 interface TestCaseResponse {
   framework: string;
   test_cases: string;
@@ -86,16 +86,20 @@ export default function TestCaseGenerator() {
 
       setFramework(response.data.framework);
       setTestCases(response.data.test_cases);
-    } catch (error: any) {
+
+    } catch (error: unknown) {
       console.error("Test case generation failed:", error);
 
       setError(
-        error?.response?.data?.detail ||
+        getErrorMessage(
+          error,
           "Failed to generate test cases. Please try again."
+        )
       );
     } finally {
       setLoading(false);
     }
+
   };
 
   return (

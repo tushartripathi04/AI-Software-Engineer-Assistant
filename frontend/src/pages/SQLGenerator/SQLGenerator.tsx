@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   Check,
   Copy,
@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 
 import api from "../../lib/axios";
-
+import { getErrorMessage } from "../../utils/errorMessage";
 interface SQLGenerationResponse {
   database: string;
   sql_query: string;
@@ -91,16 +91,20 @@ export default function SQLGenerator() {
       setExplanation(response.data.explanation);
       setQueryType(response.data.query_type);
       setOptimizationTips(response.data.optimization_tips);
-    } catch (error: any) {
+
+    } catch (error: unknown) {
       console.error("SQL generation failed:", error);
 
       setError(
-        error?.response?.data?.detail ||
+        getErrorMessage(
+          error,
           "Failed to generate SQL. Please try again."
+        )
       );
     } finally {
       setLoading(false);
     }
+
   };
 
   return (

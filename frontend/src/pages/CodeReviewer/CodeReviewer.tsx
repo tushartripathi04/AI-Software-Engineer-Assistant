@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   Check,
   Code2,
@@ -7,7 +7,7 @@ import {
   SearchCheck,
   Sparkles,
 } from "lucide-react";
-
+import { getErrorMessage } from "../../utils/errorMessage";
 import api from "../../lib/axios";
 
 interface CodeReviewResponse {
@@ -64,16 +64,20 @@ export default function CodeReviewer() {
       setIssues(response.data.issues);
       setSuggestions(response.data.suggestions);
       setOptimizedCode(response.data.optimized_code);
-    } catch (error: any) {
+
+    } catch (error: unknown) {
       console.error("Code review failed:", error);
 
       setError(
-        error?.response?.data?.detail ||
+        getErrorMessage(
+          error,
           "Failed to review code. Please try again."
+        )
       );
     } finally {
       setLoading(false);
     }
+
   };
 
   // ==========================================

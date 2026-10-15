@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import {
   Check,
   MonitorCog,
@@ -21,7 +21,11 @@ interface CurrentUser {
 type Theme = "dark" | "light";
 
 export default function Settings() {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>(() => {
+  const savedTheme = localStorage.getItem("theme");
+
+  return savedTheme === "light" ? "light" : "dark";
+});
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [loadingUser, setLoadingUser] = useState(true);
 
@@ -29,22 +33,14 @@ export default function Settings() {
   // LOAD CURRENT THEME
   // ==========================================
 
-  useEffect(() => {
-    const savedTheme =
-      localStorage.getItem("theme");
+ useEffect(() => {
+  const root = document.documentElement;
 
-    if (savedTheme === "light") {
-      setTheme("light");
-      document.documentElement.classList.remove(
-        "dark"
-      );
-    } else {
-      setTheme("dark");
-      document.documentElement.classList.add(
-        "dark"
-      );
-    }
-  }, []);
+  root.classList.remove("light", "dark");
+  root.classList.add(theme);
+
+  localStorage.setItem("theme", theme);
+}, [theme]);
 
   // ==========================================
   // GET CURRENT USER
@@ -81,22 +77,8 @@ export default function Settings() {
   // ==========================================
 
   const changeTheme = (newTheme: Theme) => {
-    setTheme(newTheme);
-
-    if (newTheme === "dark") {
-      document.documentElement.classList.add(
-        "dark"
-      );
-
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove(
-        "dark"
-      );
-
-      localStorage.setItem("theme", "light");
-    }
-  };
+  setTheme(newTheme);
+};
 
   // ==========================================
   // USER DISPLAY

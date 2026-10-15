@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+﻿import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -11,6 +11,7 @@ import {
   loginSchema,
   type LoginFormData,
 } from "../../lib/validators/auth";
+import { getErrorMessage } from "@/utils/errorMessage";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -31,11 +32,9 @@ export default function Login() {
       navigate("/dashboard");
     },
 
-    onError: (error: any) => {
-      toast.error(
-        error?.response?.data?.detail ?? "Login failed"
-      );
-    },
+    onError: (error: unknown) => {
+  toast.error(getErrorMessage(error, "Login failed"));
+},
   });
 
   const onSubmit = (data: LoginFormData) => {

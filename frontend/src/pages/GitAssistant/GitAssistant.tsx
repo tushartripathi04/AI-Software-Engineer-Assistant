@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   Check,
   Copy,
@@ -9,7 +9,7 @@ import {
   Sparkles,
   Tag,
 } from "lucide-react";
-
+import { getErrorMessage } from "../../utils/errorMessage";
 import api from "../../lib/axios";
 
 interface GitAssistantResponse {
@@ -105,19 +105,23 @@ export default function GitAssistant() {
         );
 
       setResult(response.data.result);
-    } catch (error: any) {
+
+    } catch (error: unknown) {
       console.error(
         "Git content generation failed:",
         error
       );
 
       setError(
-        error?.response?.data?.detail ||
+        getErrorMessage(
+          error,
           "Failed to generate Git content. Please try again."
+        )
       );
     } finally {
       setLoading(false);
     }
+
   };
 
   return (

@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   BriefcaseBusiness,
   Check,
@@ -8,7 +8,7 @@ import {
   RotateCcw,
   Sparkles,
 } from "lucide-react";
-
+import { getErrorMessage } from "../../utils/errorMessage";
 import api from "../../lib/axios";
 
 interface InterviewGenerationResponse {
@@ -123,19 +123,23 @@ export default function InterviewAssistant() {
       setQuestions(data.questions);
       setExpectedAnswers(data.expected_answers);
       setInterviewTips(data.interview_tips);
-    } catch (error: any) {
+
+    } catch (error: unknown) {
       console.error(
         "Interview generation failed:",
         error
       );
 
       setError(
-        error?.response?.data?.detail ||
+        getErrorMessage(
+          error,
           "Failed to generate interview questions. Please try again."
+        )
       );
     } finally {
       setLoading(false);
     }
+
   };
 
   return (
@@ -226,7 +230,7 @@ export default function InterviewAssistant() {
         >
 
           {/* ==========================================
-              LEFT — CONFIGURATION
+              LEFT â€” CONFIGURATION
           ========================================== */}
 
           <div
@@ -483,7 +487,7 @@ export default function InterviewAssistant() {
           </div>
 
           {/* ==========================================
-              RIGHT — GENERATED RESULTS
+              RIGHT â€” GENERATED RESULTS
           ========================================== */}
 
           <div className="flex flex-col gap-5">

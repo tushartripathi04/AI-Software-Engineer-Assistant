@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   Bug,
   Check,
@@ -7,6 +7,7 @@ import {
   RotateCcw,
   Sparkles,
 } from "lucide-react";
+import { getErrorMessage } from "../../utils/errorMessage";
 
 import api from "../../lib/axios";
 
@@ -66,13 +67,10 @@ export default function BugFixer() {
       setBugs(response.data.bugs);
       setFixedCode(response.data.fixed_code);
       setExplanation(response.data.explanation);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Bug fixing failed:", error);
 
-      setError(
-        error?.response?.data?.detail ||
-          "Failed to analyze and fix the code. Please try again."
-      );
+      setError(getErrorMessage(error, "Failed to analyze and fix the code. Please try again."));
     } finally {
       setLoading(false);
     }

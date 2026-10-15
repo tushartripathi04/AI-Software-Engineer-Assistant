@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   Check,
   Copy,
@@ -6,6 +6,7 @@ import {
   ServerCog,
   Sparkles,
 } from "lucide-react";
+import { getErrorMessage } from "../../utils/errorMessage";
 
 import api from "../../lib/axios";
 
@@ -67,12 +68,11 @@ export default function APIGenerator() {
       setService(response.data.service);
       setRoutes(response.data.routes);
       setExplanation(response.data.explanation);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("API generation failed:", error);
 
       setError(
-        error?.response?.data?.detail ||
-          "Failed to generate API. Please try again."
+        getErrorMessage(error, "Failed to generate API. Please try again.")
       );
     } finally {
       setLoading(false);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   BookOpen,
   Check,
@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 
 import api from "../../lib/axios";
-
+import { getErrorMessage } from "../../utils/errorMessage";
 interface ReadmeGenerationResponse {
   project_name: string;
   readme: string;
@@ -81,16 +81,20 @@ export default function ReadmeGenerator() {
       );
 
       setReadme(response.data.readme);
-    } catch (error: any) {
+
+    } catch (error: unknown) {
       console.error("README generation failed:", error);
 
       setError(
-        error?.response?.data?.detail ||
+        getErrorMessage(
+          error,
           "Failed to generate README. Please try again."
+        )
       );
     } finally {
       setLoading(false);
     }
+
   };
 
   return (

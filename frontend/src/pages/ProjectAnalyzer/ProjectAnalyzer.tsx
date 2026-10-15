@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   CheckCircle2,
   FileArchive,
@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 import api from "../../lib/axios";
-
+import { getErrorMessage } from "../../utils/errorMessage";
 interface ProjectAnalysisResponse {
   project_name: string;
   language: string;
@@ -111,16 +111,20 @@ export default function ProjectAnalyzer() {
       setTotalLines(data.total_lines);
       setTechnologies(data.technologies);
       setRecommendations(data.recommendations);
-    } catch (error: any) {
+
+    } catch (error: unknown) {
       console.error("Project analysis failed:", error);
 
       setError(
-        error?.response?.data?.detail ||
+        getErrorMessage(
+          error,
           "Failed to analyze project. Please try again."
+        )
       );
     } finally {
       setLoading(false);
     }
+
   };
 
   return (

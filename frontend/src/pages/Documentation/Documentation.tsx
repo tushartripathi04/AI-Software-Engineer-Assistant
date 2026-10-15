@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   BookOpen,
   Check,
@@ -6,7 +6,7 @@ import {
   RotateCcw,
   Sparkles,
 } from "lucide-react";
-
+import { getErrorMessage } from "../../utils/errorMessage";
 import api from "../../lib/axios";
 
 interface DocumentationResponse {
@@ -139,16 +139,20 @@ ${bestPractices}
       setSpaceComplexity(response.data.space_complexity);
       setExample(response.data.example);
       setBestPractices(response.data.best_practices);
-    } catch (error: any) {
+
+    } catch (error: unknown) {
       console.error("Documentation generation failed:", error);
 
       setError(
-        error?.response?.data?.detail ||
+        getErrorMessage(
+          error,
           "Failed to generate documentation. Please try again."
+        )
       );
     } finally {
       setLoading(false);
     }
+
   };
 
   return (
@@ -680,7 +684,7 @@ ${bestPractices}
                     text-[#d4a72c]
                   "
                 >
-                  {timeComplexity || "—"}
+                  {timeComplexity || "â€”"}
                 </p>
               </div>
 
@@ -707,7 +711,7 @@ ${bestPractices}
                     text-[#d4a72c]
                   "
                 >
-                  {spaceComplexity || "—"}
+                  {spaceComplexity || "â€”"}
                 </p>
               </div>
 

@@ -1,9 +1,15 @@
+
+import { AxiosError } from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 import AuthService from "@/services/auth.service";
 import type { RegisterRequest } from "@/types/auth";
+
+interface ApiErrorResponse {
+  detail?: string;
+}
 
 export const useRegister = () => {
   const navigate = useNavigate();
@@ -17,11 +23,11 @@ export const useRegister = () => {
       navigate("/login");
     },
 
-    onError: (error: any) => {
-      toast.error(
-        error?.response?.data?.detail ||
-          "Registration failed"
-      );
+    onError: (error: Error) => {
+      const apiError = error as AxiosError<ApiErrorResponse>;
+      const message = apiError.response?.data?.detail;
+
+      toast.error(message || "Registration failed");
     },
   });
 };

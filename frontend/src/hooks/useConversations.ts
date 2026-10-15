@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 
+import { useEffect, useState } from "react";
 import {
   getConversations,
   type Conversation,
@@ -7,7 +7,7 @@ import {
 
 export function useConversations() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   async function loadConversations() {
@@ -16,14 +16,9 @@ export function useConversations() {
 
     try {
       const data = await getConversations();
-
       setConversations(data);
     } catch (err) {
-      console.error(
-        "Failed to load conversations:",
-        err
-      );
-
+      console.error("Failed to load conversations:", err);
       setError("Failed to load conversations");
     } finally {
       setLoading(false);
@@ -31,7 +26,29 @@ export function useConversations() {
   }
 
   useEffect(() => {
-    loadConversations();
+    let cancelled = false;
+
+    getConversations()
+      .then((data) => {
+        if (!cancelled) {
+          setConversations(data);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          console.error("Failed to load conversations:", err);
+          setError("Failed to load conversations");
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return {

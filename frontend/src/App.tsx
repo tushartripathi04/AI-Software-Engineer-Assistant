@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+﻿import { Navigate, Route, Routes } from "react-router-dom";
 
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
@@ -9,7 +9,8 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import Chat from "./pages/Chat/Chat";
 import CodeGenerator from "./pages/CodeGenerator/CodeGenerator";
 import CodeReviewer from "./pages/CodeReviewer/CodeReviewer";
-import BugFixer from "./pages/BugFixer/BugFixer";
+// import BugFixer from "./pages/BugFixer/BugFixer";
+import BugFixer from "./pages/BugFixer/Bugfixer";
 import Documentation from "./pages/Documentation/Documentation";
 import TestCaseGenerator from "./pages/TestCaseGenerator/TestCaseGenerator";
 import SQLGenerator from "./pages/SQLGenerator/SQLGenerator";

@@ -1,15 +1,14 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   BriefcaseBusiness,
   Check,
   Copy,
-  FileText,
   RotateCcw,
   Sparkles,
 } from "lucide-react";
 
 import api from "../../lib/axios";
-
+import { getErrorMessage } from "../../utils/errorMessage";
 interface ResumeGenerationResponse {
   project_name: string;
   resume_description: string;
@@ -103,19 +102,23 @@ export default function ResumeGenerator() {
       setLinkedinDescription(data.linkedin_description);
       setPortfolioDescription(data.portfolio_description);
       setAtsBulletPoints(data.ats_bullet_points);
-    } catch (error: any) {
+
+    } catch (error: unknown) {
       console.error(
         "Resume generation failed:",
         error
       );
 
       setError(
-        error?.response?.data?.detail ||
+        getErrorMessage(
+          error,
           "Failed to generate resume content. Please try again."
+        )
       );
     } finally {
       setLoading(false);
     }
+
   };
 
   return (
@@ -207,7 +210,7 @@ export default function ResumeGenerator() {
         >
 
           {/* ==========================================
-              LEFT — PROJECT INFORMATION
+              LEFT â€” PROJECT INFORMATION
           ========================================== */}
 
           <div
@@ -460,7 +463,7 @@ export default function ResumeGenerator() {
           </div>
 
           {/* ==========================================
-              RIGHT — GENERATED CONTENT
+              RIGHT â€” GENERATED CONTENT
           ========================================== */}
 
           <div className="flex flex-col gap-5">
@@ -709,7 +712,7 @@ export default function ResumeGenerator() {
 
                 <CopyButton
                   text={atsBulletPoints
-                    .map((point) => `• ${point}`)
+                    .map((point) => `â€¢ ${point}`)
                     .join("\n")}
                   section="ats"
                   copiedSection={copiedSection}
