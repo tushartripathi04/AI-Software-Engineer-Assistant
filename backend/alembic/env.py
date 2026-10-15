@@ -1,5 +1,4 @@
 from logging.config import fileConfig
-
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
@@ -10,8 +9,13 @@ from app.db.database import Base
 
 # Import all models here
 from app.models import User
+from app.core.config import settings
 
 config = context.config
+config.set_main_option(
+    "sqlalchemy.url",
+    settings.DATABASE_URL.replace("%", "%%"),
+)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
